@@ -21,13 +21,20 @@ export interface PeriodicElement {
 
 const ELEMENT_DATA: PeriodicElement[] = [
   {position: 0,
-     name: '', 
-     owner: "", 
-     description: '',
-     date:'',
-     percent:'',
+     name: 'wrkluge', 
+     owner: "nik", 
+     description: 'new project',
+     date:'2/203/23',
+     percent:'100%',
      iddd:''
-    },
+    },{position: 0,
+      name: 'wrkluge2', 
+      owner: "jaik", 
+      description: 'new project',
+      date:'12/2/23',
+      percent:'80%',
+      iddd:''
+     },
  
   
   
