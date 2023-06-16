@@ -1,0 +1,71 @@
+<h2 mat-dialog-title>Add Project</h2>
+<mat-dialog-content class="mat-typography">
+   <tr > <td style="padding-right: 15px;"><div class="form-field" style="margin-bottom: 20px;" >
+        <label class="label">Name</label>
+        <form class="example-form">
+            <div class="input-container">
+                <input type="text" class="example-input" [(ngModel)]="name" [ngModelOptions]="{standalone: true}"  >
+                
+            </div>
+        </form>
+    </div></td>
+   <td> <div class="form-field">
+        <label class="label">Owner</label>
+        <form class="example-form">
+            <div class="input-container">
+                <input type="text" class="example-input" [(ngModel)]="owner" [ngModelOptions]="{standalone: true}" >
+            </div>
+        </form>
+    </div></td></tr>
+    <div class="form-field" style="margin-bottom: 20px;">
+        <label class="label">Description</label>
+        <form class="example-form">
+            <div class="input-container">
+                <input type="text" class="example-input" style="width: 300px; height: 50px;" [(ngModel)]="description" [ngModelOptions]="{standalone: true}">
+            </div>
+        </form>
+    </div>
+    <div class="form-field" style="margin-bottom: 20px;">
+        <label class="label">Project type</label>
+        <form class="example-form">
+            <div class="input-container">
+                <input type="text" class="example-input"  >
+            </div>
+        </form>
+    </div>
+    <tr> <td style="padding-right: 15px;"><div class="form-field">
+        <label class="label">Planned To Start </label>
+        <form class="example-form">
+            <div class="input-container">
+                <input type="text" class="example-input" [(ngModel)]="planstart" [ngModelOptions]="{standalone: true}">
+            </div>
+        </form>
+    </div></td>
+   <td style="padding-right: 15px;"> <div class="form-field">
+        <label class="label">Start Date</label>
+        <form class="example-form">
+            <div class="input-container">
+                <input type="text" class="example-input" [(ngModel)]="percent" [ngModelOptions]="{standalone: true}">
+            </div>
+        </form>
+    </div></td>  <td> <div class="form-field"style="margin-bottom: 20px;">
+        <label class="label">End Date</label>
+        <form class="example-form">
+            <div class="input-container">
+                <input type="text" class="example-input">
+            </div>
+        </form>
+    </div></td></tr>
+    <div class="form-field">
+        <label class="label">Planned To Completion</label>
+        <form class="example-form">
+            <div class="input-container">
+                <input type="text" class="example-input">
+            </div>
+        </form>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button mat-dialog-close (click)=" getData()"  cdkFocusInitial >Done</button>
+</mat-dialog-actions>
