@@ -1,4 +1,4 @@
-import { Component,Inject } from '@angular/core';
+import { Component,EventEmitter,Inject, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -8,6 +8,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PeriodicElement } from '../sidebar.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { ServiceComponent } from '../../service/service.component';
 @Component({
   selector: 'app-dialog',
   templateUrl: './dialog.component.html',
@@ -20,9 +21,50 @@ export class DialogComponent {
   description!: string;
   planstart!: string;
   percent!: string;
-  constructor(public dialog: MatDialog,@Inject(MAT_DIALOG_DATA) public data: any ) {
+  projectAdded: any;
+  constructor(public dialog: MatDialog,@Inject(MAT_DIALOG_DATA) public data: any,private router: Router,private http: HttpClient ,private apiService: ServiceComponent ) {
 
     
+  }
+  Editproject() {
+    
+    const idd = localStorage.getItem('idd')
+    const token =  localStorage.getItem('token');
+    const id = localStorage.getItem('userId')
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const editproject = this.apiService.apiUrl;
+    const mail = localStorage.getItem('EMAIL')
+    const requestBody = {
+      status: 'active',
+      projectName: this.data.name,
+      projectDescription: this.data.description,
+      projectDuration: 15,
+      portfolioId: '0007',
+      projectOwner: {
+        _id: id,
+        name: this.data.owner,
+        email: mail
+      },
+      projectedStartDate: this.data.planstart,
+      projectedCompletionDate: this.data.percent
+    };
+
+    this.http.put(editproject + '/api/project/update'+ '/' + idd, requestBody, { headers }).subscribe(
+      (response) => {
+        // Handle the successful login response
+        console.log(response);
+        
+        alert('Project Update Successfully')
+        this.projectAdded.emit();
+        
+      },
+      (error) => {
+        // Handle the error response
+        console.error(error);
+       
+      }
+    );
+  
   }
 
 }
@@ -42,9 +84,52 @@ export class DialogContentExampleDialog {
   description!: string;
   planstart!: string;
   percent!: string;
-  constructor(public dialog: MatDialog,@Inject(MAT_DIALOG_DATA) public data: any) {
+  
+  
+  constructor(public dialog: MatDialog,@Inject(MAT_DIALOG_DATA) public data: any,private router: Router,private http: HttpClient ,private apiService: ServiceComponent) {
 
     
+  }
+
+  Editproject() {
+    
+   const idd = localStorage.getItem('idd')
+    const token =  localStorage.getItem('token');
+    const id = localStorage.getItem('userId')
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const editproject = this.apiService.apiUrl;
+    const mail = localStorage.getItem('EMAIL')
+    const requestBody = {
+      status: 'active',
+      projectName: this.data.name,
+      projectDescription: this.data.description,
+      projectDuration: 15,
+      portfolioId: '0007',
+      projectOwner: {
+        _id: id,
+        name: this.data.owner,
+        email: mail
+      },
+      projectedStartDate: this.data.planstart,
+      projectedCompletionDate: this.data.percent
+    };
+
+    this.http.put(editproject + '/api/project/update'+ '/' + idd, requestBody, { headers }).subscribe(
+      (response) => {
+        // Handle the successful login response
+        console.log(response);
+        
+        alert('Project Update Successfully')
+        
+        
+      },
+      (error) => {
+        // Handle the error response
+        console.error(error);
+       
+      }
+    );
+  
   }
   
 }
@@ -61,64 +146,70 @@ export class AddDialogContentExampleDialog {
   description!: string;
   planstart!: string;
   percent!: string;
-  
+  @Output() projectAdded: EventEmitter<void> = new EventEmitter<void>();
   constructor(
-    public dialog: MatDialog,private router: Router,private http: HttpClient ,
+    public dialog: MatDialog,private router: Router,private http: HttpClient ,private apiService: ServiceComponent,
    
     public dialogRef: MatDialogRef<AddDialogContentExampleDialog>
   ) { }
    
-  getData(): any {
-    const data = {
-      name: this.name,
-      owner: this.owner,
-      description: this.description,
-      planstart:this.planstart,
-      percent:this.percent
-      // Include other fields
-    };
+  // getData(): any {
+  //   const data = {
+  //     name: this.name,
+  //     owner: this.owner,
+  //     description: this.description,
+  //     planstart:this.planstart,
+  //     percent:this.percent
+  //     // Include other fields
+  //   };
   
-    return data;
+  //   return data;
     
-  }
-  
-  //  Addproject() {
-    
-  //   // const email = this.loginForm.controls['email'].value;
-  //   // const password = this.loginForm.controls['password'].value;
-  //   const token =  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwMDA2Iiwicm9sZSI6Im1hbmFnZXIiLCJpYXQiOjE2ODY5MDQxMTQsImV4cCI6MTY4Njk5MDUxNH0.RMbthiJXMEOE-xw71pBY6wXbYQ5IXOipFzF_LrwWn48"
-  //   const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-  //   this.http.post('http://localhost:8080/api/project/add',
-  //   {
-  //     status: "active",
-  //     projectName: "newww",
-  //     projectDescription: "This is the updated project",
-  //     projectDuration: 15,
-  //     portfolioId: "0007",
-  //      projectOwner: {
-  //       _id: "0006",
-  //        name: "test01",
-  //        email: "test2@gmail.com"
-  //      },
-  //        projectedStartDate: "2023-06-12T12:00:00Z",
-  //        projectedCompletionDate: "2023-06-25T12:00:00Z"
-  // },
-  // {headers}).subscribe(
-  //     (response) => {
-  //       // Handle the successful login response
-  //       console.log(response);
-  //       alert('Project add Successfully')
-  //       this.router.navigate(['/projects']); 
-  //     },
-  //     (error) => {
-  //       // Handle the error response
-  //       console.error(error);
-  //     }
-  //   );
-  //   this.dialogRef.close()
   // }
   
+   Addproject() {
+    
+    // const email = this.loginForm.controls['email'].value;
+    // const password = this.loginForm.controls['password'].value;
+    const token =  localStorage.getItem('token');
+    const id = localStorage.getItem('userId')
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const addproject = this.apiService.apiUrl;
+    const mail = localStorage.getItem('EMAIL')
+    const requestBody = {
+      status: 'active',
+      projectName: this.name,
+      projectDescription: this.description,
+      projectDuration: 15,
+      portfolioId: '0007',
+      projectOwner: {
+        _id: id,
+        name: this.owner,
+        email: mail
+      },
+      projectedStartDate: this.planstart,
+      projectedCompletionDate: this.percent
+    };
+
+    this.http.post(addproject + '/api/project/add', requestBody, { headers }).subscribe(
+      (response) => {
+        // Handle the successful login response
+        console.log(response);
+        
+        alert('Project add Successfully')
+        this.projectAdded.emit();
+        this.dialogRef.close();
+      },
+      (error) => {
+        // Handle the error response
+        console.error(error);
+       
+      }
+    );
+    this.dialogRef.close()
+  }
   
+ 
   
 }
 

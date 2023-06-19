@@ -33,7 +33,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import { PortfolioComponent } from './components/portfolio/portfolio.component';
 import { PortsidebarComponent } from './components/portfolio/portsidebar/portsidebar.component';
-import { ServiceComponent } from './components/service/service.component';
+import {   ServiceComponent } from './components/service/service.component';
 
 @NgModule({
   declarations: [
@@ -77,7 +77,7 @@ import { ServiceComponent } from './components/service/service.component';
     
     
   ],
-  providers: [],
+  providers: [ServiceComponent], 
   bootstrap: [AppComponent]
 })
 export class AppModule { }

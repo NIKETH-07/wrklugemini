@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { AddDialogContentExampleDialog, DialogComponent, DialogContentExampleDialog } from './dialog/dialog.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { ServiceComponent } from '../service/service.component';
+import {  ServiceComponent } from '../service/service.component';
 
 export interface PeriodicElement {
   name: string;
@@ -106,7 +106,7 @@ export class SidebarComponent implements OnInit {
     console.log('Selected item:', item);
   }
 
-  constructor(public dialog: MatDialog ,private router: Router,private http: HttpClient ,private projectService: ServiceComponent) {}
+  constructor(public dialog: MatDialog ,private router: Router,private http: HttpClient ,private projectService: ServiceComponent,private apiService: ServiceComponent) {}
 
   openDialog() {
    
@@ -144,6 +144,9 @@ export class SidebarComponent implements OnInit {
     const dialogRef = this.dialog.open(AddDialogContentExampleDialog, {
       width: '700px',
       data: {}
+    });
+    dialogRef.componentInstance.projectAdded.subscribe(() => {
+      this.getAllProjects();
     });
   
     dialogRef.afterClosed().subscribe(result => {
@@ -188,13 +191,16 @@ export class SidebarComponent implements OnInit {
     console.log(this.isRowSelected); // Update the isRowSelected variable
   
     if (this.isRowSelected) {
-      console.log('rowww', row.iddd); 
+      console.log('rowww', row.iddd);
+      localStorage.setItem('idd',this.selection.selected[0].iddd) 
+      
       // Log the selected row data
     }
   }
 
   deleteSelectedRow() {
     const ID = this.selection.selected[0].iddd;
+    localStorage.setItem('idd',this.selection.selected[0].iddd)
     // Get the selected row(s) from the selection model
     const selectedRows = this.selection.selected;
   console.log('ro',this.selection.selected[0].iddd)
@@ -206,18 +212,18 @@ export class SidebarComponent implements OnInit {
   
     // Clear the selection after deletion
     this.selection.clear();
-    const token =  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwMDA2Iiwicm9sZSI6Im1hbmFnZXIiLCJpYXQiOjE2ODY4MTkwNzMsImV4cCI6MTY4NjkwNTQ3M30.l9RHxeOZHSZ_UisdBrl0vUwJGL-ZHpy7GGbyIAwVXKA"
+    const token = localStorage.getItem('token')
     
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
-    this.http.delete('http://localhost:8080/api/project/delete'+ '/' + ID, {
+    const deleteapi = this.apiService.apiUrl;
+    this.http.delete(deleteapi +'/api/project/delete'+ '/' + ID, {
       headers
 }).subscribe(
       (response) => {
         // Handle the successful login response
         console.log(response);
         alert('Project Delete Successfully')
-        this.router.navigate(['/sidebar']); 
+         
       },
       (error) => {
         // Handle the error response
@@ -230,7 +236,8 @@ export class SidebarComponent implements OnInit {
  
   
  getAllProjects() {
-  this.http.get('http://localhost:8080/api/project/list-all').subscribe(
+  const apiUrl = this.apiService.apiUrl;
+  this.http.get(apiUrl+'/api/project/list-all').subscribe(
     (response) => {
       // Handle the successful response
       const projectData = response as any[]; // Assuming the response is an array of projects
@@ -271,6 +278,7 @@ processProjects(projects: any[]): PeriodicElement[] {
     date: project.projectedStartDate,
     percent: project.status === "active" ? "100%" : "0%",
     iddd:project.projectId
+    
   }));
 
   return processedProjects;

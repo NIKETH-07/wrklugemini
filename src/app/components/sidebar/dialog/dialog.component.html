@@ -4,7 +4,7 @@
         <label class="label">Name</label>
         <form class="example-form">
             <div class="input-container">
-                <input type="text" class="example-input" [(ngModel)]="name" [ngModelOptions]="{standalone: true}">
+                <input type="text" class="example-input" [(ngModel)]="this.data.name" [ngModelOptions]="{standalone: true}">
                 
             </div>
         </form>
@@ -13,7 +13,7 @@
         <label class="label">Owner</label>
         <form class="example-form">
             <div class="input-container">
-                <input type="text" class="example-input" [(ngModel)]="owner" [ngModelOptions]="{standalone: true}">
+                <input type="text" class="example-input" [(ngModel)]="this.data.owner" [ngModelOptions]="{standalone: true}">
             </div>
         </form>
     </div></td></tr>
@@ -21,7 +21,7 @@
         <label class="label">Description</label>
         <form class="example-form">
             <div class="input-container">
-                <input type="text" class="example-input" style="width: 300px; height: 50px;" [(ngModel)]="description" [ngModelOptions]="{standalone: true}">
+                <input type="text" class="example-input" style="width: 300px; height: 50px;" [(ngModel)]="this.data.description" [ngModelOptions]="{standalone: true}">
             </div>
         </form>
     </div>
@@ -37,7 +37,7 @@
         <label class="label">Planned To Start </label>
         <form class="example-form">
             <div class="input-container">
-                <input type="text" class="example-input"[(ngModel)]="planstart" [ngModelOptions]="{standalone: true}">
+                <input type="text" class="example-input"[(ngModel)]="this.data.date" [ngModelOptions]="{standalone: true}">
             </div>
         </form>
     </div></td>
@@ -52,7 +52,7 @@
         <label class="label">End Date</label>
         <form class="example-form">
             <div class="input-container">
-                <input type="text" class="example-input" [(ngModel)]="planstart" [ngModelOptions]="{standalone: true}">
+                <input type="text" class="example-input" [(ngModel)]="this.data.date" [ngModelOptions]="{standalone: true}">
             </div>
         </form>
     </div></td></tr>
@@ -67,5 +67,5 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancel</button>
-    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Done</button>
+    <button mat-button mat-dialog-close (click)= " Editproject()" cdkFocusInitial>Done</button>
 </mat-dialog-actions>

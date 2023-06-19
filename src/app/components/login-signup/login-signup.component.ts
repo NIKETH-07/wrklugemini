@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ServiceComponent } from '../service/service.component';
 
 
 @Component({
@@ -16,7 +17,7 @@ export class LoginSignupComponent implements OnInit {
   isSignupVisible = false;
 
 
-  constructor(private fb: FormBuilder,private router: Router,private http: HttpClient) {
+  constructor(private fb: FormBuilder,private router: Router,private http: HttpClient,private apiService: ServiceComponent) {
   }
 
   ngOnInit() {
@@ -34,19 +35,25 @@ export class LoginSignupComponent implements OnInit {
 
   onLogin() {
     const email = this.loginForm.controls['email'].value;
+    localStorage.setItem('EMAIL',email);
     const password = this.loginForm.controls['password'].value;
-  
+    const apiUrl = this.apiService.apiUrl;
     // Make the HTTP POST request to the login endpoint of your Node.js backend
-    this.http.post('http://localhost:8080/api/auth/login', { 
+    this.http.post(apiUrl +'/api/auth/login', { 
       email: this.loginForm.value.email,
        
         password: this.loginForm.value.password,
      }).subscribe(
-      (response) => {
+      (response: any) => {
         // Handle the successful login response
-        console.log(response);
+        console.log( 'token', response);
+        
+        const token =response.token;
+        
+        
+        localStorage.setItem('token',token );
         alert('User login Successfully')
-        this.router.navigate(['/sidebar']); 
+        this.router.navigate(['/projects']); 
       },
       (error) => {
         // Handle the error response

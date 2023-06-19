@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ServiceComponent } from '../service/service.component';
+
 
 @Component({
   selector: 'app-signup',
@@ -10,7 +12,7 @@ import { Router } from '@angular/router';
 })
 export class SignupComponent {
  hide: boolean = true;
-  constructor(private fb: FormBuilder,private router: Router,private http: HttpClient) {
+  constructor(private fb: FormBuilder,private router: Router,private http: HttpClient,private apiService: ServiceComponent) {
   }
   signupForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -27,9 +29,11 @@ export class SignupComponent {
     const password = this.signupForm.controls['password'].value;
     const name = this.signupForm.controls['name'].value;
     const role = this.signupForm.controls['role'].value;
-  
+    const apiUrl = this.apiService.apiUrl;
+    console.log( "apiii", apiUrl);
+
     // Make the HTTP POST request to the login endpoint of your Node.js backend
-    this.http.post('http://localhost:8080//api/auth/register', { 
+    this.http.post(apiUrl+'/api/auth/register', { 
       name:this.signupForm.value.name,
       email: this.signupForm.value.email,
         password: this.signupForm.value.password,
@@ -37,9 +41,13 @@ export class SignupComponent {
      }).subscribe(
       (response: any) => {
         // Handle the successful login response
-        console.log(response);
+        console.log( 'id', response);
+    const    userid = response.userId;
+    console.log('sigup details',userid);
+    
+    localStorage.setItem('userId', userid);
         alert('User login Successfully')
-        this.router.navigate(['/projects']); 
+        this.router.navigate(['/']); 
       },
       (error: any) => {
         // Handle the error response
