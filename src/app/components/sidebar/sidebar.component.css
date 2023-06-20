@@ -6,14 +6,20 @@
 
 
 .sidebar {
-  height: 100%;
   width: 200px;
-  display: flex;
+  overflow-y: auto;
+  flex-shrink: 0;
+ 
+
  
 }
 
 .main-content {
-  flex: 1;
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-right: 14px;
+  padding-left: 5px;
+  padding-top: 5px;
 }
 ul {
   list-style-type: none;
@@ -183,3 +189,5 @@ align-items: center;
 .selected {
   background-color: #bdfa61;
 }
+
+

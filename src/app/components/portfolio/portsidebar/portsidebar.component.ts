@@ -1,10 +1,12 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { DialogContentExampleDialog, AddDialogContentExampleDialog } from '../../sidebar/dialog/dialog.component';
+import { EditDialog, PortDialogComponent,  } from '../port-dialog/port-dialog.component';
+import { ServiceComponent } from '../../service/service.component';
 export interface PeriodicElement {
   name: string;
   position: number;
@@ -12,21 +14,30 @@ export interface PeriodicElement {
   description: string;
   date:string;
   percent:string;
+  portId:string;
   
 }
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 0,
-     name: '', 
-     owner: "", 
-     description: '',
-     date:'',
-     percent:'',
-    },
+// const ELEMENT_DATA: PeriodicElement[] = [
+//   {position: 0,
+//     name: 'test pro', 
+//     owner: "nik", 
+//     description: 'user1',
+//     date:'user@gmail.com',
+//     percent:'2/203/23',
+    
+//    },{position: 0,
+//      name: 'edited', 
+//      owner: "jaik", 
+//      description: 'user2',
+//      date:'us@gmail.com',
+//      percent:'8012/2/23%',
+    
+//     },
  
   
   
-];
+// ];
 @Component({
   selector: 'app-portsidebar',
   templateUrl: './portsidebar.component.html',
@@ -34,12 +45,18 @@ const ELEMENT_DATA: PeriodicElement[] = [
 })
 export class PortsidebarComponent {
   isRowSelected: boolean = false;
+   selectedSidebarItem!: string;
  
+   ngOnInit(): void {
+    this.getAllProjects();
+  
+  }
 
 
 
-  displayedColumns: string[] = ['select',  'name', 'owner', 'description','percent','date'];
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+  displayedColumns: string[] = ['select',  'name', 'owner', 'description','percent','date',];
+  dataSource: MatTableDataSource<PeriodicElement> = new MatTableDataSource<PeriodicElement>();
+ // dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
   selection = new SelectionModel<PeriodicElement>(true, []);
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -72,6 +89,7 @@ export class PortsidebarComponent {
   }
   sidebarItems: string[] = ["Portfolios I Own",  'All Portfolios', ];
   getIconClass(item: string): string {
+    this.selectedSidebarItem = item;
     switch (item) {
       case "Portfolios I Own":
         return "fa fa-address-card"; // Replace with the desired icon class for "Projects I Own"
@@ -84,22 +102,25 @@ export class PortsidebarComponent {
   }
   // Function to handle item selection
   selectItem(item: string) {
+    this.selectedSidebarItem = item;
     // TODO: Add logic to handle item selection
     console.log('Selected item:', item);
   }
 
-  constructor(public dialog: MatDialog ,private router: Router,private http: HttpClient) {}
+  constructor(public dialog: MatDialog ,private router: Router,private http: HttpClient,private projectService: ServiceComponent,private apiService: ServiceComponent) {}
 
   openDialog() {
    
     const selectedRowData = this.selection.selected[0];
   
    
-    const dialogRef = this.dialog.open(DialogContentExampleDialog, {
+    const dialogRef = this.dialog.open(PortDialogComponent, {
       width: '700px', 
       data: selectedRowData ,
     });
-  
+    dialogRef.componentInstance.portAdded.subscribe(() => {
+      this.getAllProjects();
+    });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed', result);
@@ -109,23 +130,11 @@ export class PortsidebarComponent {
   
 
   onDialog(): void {
-  //   const dialogRef = this.dialog.open(AddDialogContentExampleDialog, {
-  //     data: {} // Pass an empty object or provide any initial data if needed
-  //   });
+    const selectedRowData = this.selection.selected[0];
   
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     if (result) {
-  //       console.log(result.name);
-  //       console.log(result.owner);
-  //       console.log(result.description);
-  //       // Access other fields
-  //     }
-  //   });
-  // }
-  
-    const dialogRef = this.dialog.open(AddDialogContentExampleDialog, {
+    const dialogRef = this.dialog.open(EditDialog, {
       width: '700px',
-      data: {}
+      data:selectedRowData,
     });
   
     dialogRef.afterClosed().subscribe(result => {
@@ -141,6 +150,7 @@ export class PortsidebarComponent {
         description: result.description,
         date:result.planstart,
         percent:result.percent,
+        portId:result.portId
       };
 
       // Add the new project to the table's data source
@@ -163,14 +173,15 @@ export class PortsidebarComponent {
     console.log(this.isRowSelected); // Update the isRowSelected variable
   
     if (this.isRowSelected) {
-      console.log( row); // Log the selected row data
+      console.log('portid', row.portId);
+      localStorage.setItem('portid',this.selection.selected[0].portId) // Log the selected row data
     }
   }
 
   deleteSelectedRow() {
     // Get the selected row(s) from the selection model
     const selectedRows = this.selection.selected;
-  
+  const ID =localStorage.getItem('portid')
     // Perform the deletion logic here, e.g., remove the selected row(s) from your data source
     for (const row of selectedRows) {
       // Assuming dataSource is your MatTableDataSource instance
@@ -179,54 +190,43 @@ export class PortsidebarComponent {
   
     // Clear the selection after deletion
     this.selection.clear();
-  }
-  Addproject() {
-    // const email = this.loginForm.controls['email'].value;
-    // const password = this.loginForm.controls['password'].value;
-    const token =  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwMDA2Iiwicm9sZSI6Im1hbmFnZXIiLCJpYXQiOjE2ODY4MTkwNzMsImV4cCI6MTY4NjkwNTQ3M30.l9RHxeOZHSZ_UisdBrl0vUwJGL-ZHpy7GGbyIAwVXKA"
-    this.http.post('https://workluge-test-production.up.railway.app/api/project/add', {
-    status: "active",
-    projectName: "Updated Project",
-    projectDescription: "This is the updated project",
-    projectDuration: 15,
-    portfolioId: "0001",
-     projectOwner: {
-      _id: "0006",
-       name: "test01",
-       email: "test2@gmail.com"
-     },
-       projectedStartDate: "2023-06-12T12:00:00Z",
-       projectedCompletionDate: "2023-06-25T12:00:00Z"
+    const token = localStorage.getItem('token')
+    
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const deleteapi = this.apiService.apiUrl;
+    this.http.delete(deleteapi +'/api/portfolio/delete'+ '/' + ID, {
+      headers
 }).subscribe(
       (response) => {
         // Handle the successful login response
         console.log(response);
-        alert('Project add Successfully')
-        this.router.navigate(['/sidebar']); 
+        alert('Project Delete Successfully')
+         
       },
       (error) => {
         // Handle the error response
         console.error(error);
       }
     );
-    
+
+
   }
+ 
   
  getAllProjects() {
-  this.http.get('https://workluge-test-production.up.railway.app/api/project/list-all').subscribe(
+  const apiUrl = this.apiService.apiUrl;
+  this.http.get(apiUrl+'/api/portfolio/list-all').subscribe(
     (response) => {
       // Handle the successful response
       const projectData = response as any[]; // Assuming the response is an array of projects
-      console.log(projectData);
-      alert('All projects retrieved successfully');
-
-      // Call the processProjects function and store the result in processedProjects property
-      this.dataSource.data = this.processProjects(projectData);
-console.log('filter:' ,  this.dataSource._filterData)
+      console.log( "jhhjk", projectData);
+      
+      
+      this.processProjects(projectData);
       // Use the processed projects data to update ELEMENT_DATA
      
 
-      console.table(ELEMENT_DATA);
+      
     },
     (error) => {
       // Handle the error response
@@ -235,27 +235,20 @@ console.log('filter:' ,  this.dataSource._filterData)
   );
 }
 
-processProjects(projects: any[]): PeriodicElement[] {
-  // Perform any further operations with the projects data
-
-  console.log("Processing projects:", projects);
-  // You can store the projects in a variable or use them directly in this function or pass them to another function
-  // Example:
-  const filteredProjects = projects.filter(project => project.status === 'active');
-  console.log("Filtered projects:", filteredProjects);
-
-  // Process the filtered projects and return the processed data
-  const processedProjects: PeriodicElement[] = filteredProjects.map((project, index) => ({
-    position: index,
-    name: project.projectName,
-    owner: project.projectOwner.name,
-    description: project.projectDescription,
-    date: project.projectedStartDate,
-    percent: project.status === "active" ? "100%" : "0%",
+processProjects(projects: any[]): void {
+  const processedProjects: PeriodicElement[] = projects.map((project, index) => ({
+    position: index + 1,
+    name: project.portfolioName,
+    owner: project.portfolioManager.name,
+    description: project.portfolioDescription,
+    date: project.updatedAt.$date,
+    percent: project.createdAt.$date,
+    portId: project.portfolioId
   }));
 
-  return processedProjects;
+  this.dataSource.data = processedProjects;
 }
+
 
   
   

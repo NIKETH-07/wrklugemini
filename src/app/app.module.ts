@@ -34,6 +34,9 @@ import {MatInputModule} from '@angular/material/input';
 import { PortfolioComponent } from './components/portfolio/portfolio.component';
 import { PortsidebarComponent } from './components/portfolio/portsidebar/portsidebar.component';
 import {   ServiceComponent } from './components/service/service.component';
+import { PortDialogComponent } from './components/portfolio/port-dialog/port-dialog.component';
+import { PeopleComponent } from './components/people/people.component';
+import { PeoplesidebarComponent } from './components/people/peoplesidebar/peoplesidebar.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +49,10 @@ import {   ServiceComponent } from './components/service/service.component';
     DialogComponent,
     PortfolioComponent,
     PortsidebarComponent,
-    ServiceComponent
+    ServiceComponent,
+    PortDialogComponent,
+    PeopleComponent,
+    PeoplesidebarComponent
   ],
   imports: [
     BrowserModule,

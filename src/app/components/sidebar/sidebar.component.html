@@ -3,7 +3,7 @@
 <mat-drawer-container class="example-container">
   <mat-drawer mode="side" opened class="sidebar">
     <ul >
-      <li *ngFor="let item of sidebarItems" (click)="selectItem(item)">
+      <li *ngFor="let item of sidebarItems;" (click)="selectItem(item)"  >
         <i [ngClass]="getIconClass(item)" class="sidebar-icon"></i> 
         <span class="sidebar-text">{{ item }}</span>
 
@@ -14,7 +14,7 @@
     <div class="container">
       <mat-card class="card">
         <mat-card-header>
-          <div style="font-weight: 550; font-size: large; color: #34347a;">All Projects</div>
+          <div style="font-weight: 550; font-size: large; color: #34347a;">{{ selectedSidebarItem }}</div>
           <div class="controller">
             <!-- Your controller content here -->
           </div>

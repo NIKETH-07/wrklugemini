@@ -7,6 +7,7 @@ import { SignupComponent } from './components/signup/signup.component';
 import { LoginSignupComponent } from './components/login-signup/login-signup.component';
 import { ProjectsComponent } from './components/projects/projects.component';
 import { PortfolioComponent } from './components/portfolio/portfolio.component';
+import { PeopleComponent } from './components/people/people.component';
 
 const routes: Routes = [
   { path: '', component: AppComponent,
@@ -16,7 +17,8 @@ children:[
 { path: 'topbar', component: TopbarComponent},
 { path: 'signup', component: SignupComponent},
 { path: 'projects', component: ProjectsComponent},
-{ path: 'portfolio', component: PortfolioComponent}
+{ path: 'portfolio', component: PortfolioComponent},
+{ path: 'people', component: PeopleComponent}
 ]
  },
 

@@ -6,10 +6,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./topbar.component.css']
 })
 export class TopbarComponent {
-  activeLink!: string;
-
-  highlightLink(link: string) {
-    this.activeLink = link;
-  }
+  
 
 }

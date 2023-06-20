@@ -1,7 +1,4 @@
-.topnav {
-  
-    overflow: hidden;
-  }
+
   
   /* Style the links inside the navigation bar */
   .topnav a {
@@ -16,6 +13,7 @@
   
   /* Change the color of links on hover */
   .topnav a:hover {
+    
     background-color: #ddd;
     
   }
@@ -53,7 +51,9 @@
     position: relative;
   }
 
-  .active {
-    background-color: rgb(255, 123, 0);
-  }
+  .topnav a:focus {
+    transform: scale(1.2); /* Increase the scale to zoom in */
+    font-weight: bold; /* Make the text bold */
+}
+
   

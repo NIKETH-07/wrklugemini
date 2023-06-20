@@ -1,12 +1,13 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import { AddDialogContentExampleDialog, DialogComponent, DialogContentExampleDialog } from './dialog/dialog.component';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import {  ServiceComponent } from '../service/service.component';
+import { ServiceComponent } from '../../service/service.component';
+import { DialogContentExampleDialog, AddDialogContentExampleDialog } from '../../sidebar/dialog/dialog.component';
+
+
 
 export interface PeriodicElement {
   name: string;
@@ -40,13 +41,14 @@ const ELEMENT_DATA: PeriodicElement[] = [
   
   
 ];
-
 @Component({
-  selector: 'app-sidebar',
-  templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.css']
+  selector: 'app-peoplesidebar',
+  templateUrl: './peoplesidebar.component.html',
+  styleUrls: ['./peoplesidebar.component.css']
 })
-export class SidebarComponent implements OnInit {
+
+export class PeoplesidebarComponent {
+
   isRowSelected: boolean = false;
   selectedSidebarItem!: string;
 
@@ -89,16 +91,16 @@ export class SidebarComponent implements OnInit {
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
-  sidebarItems: string[] = ["Projects I Own", "Projects I'm On", "All Projects", ];
+  sidebarItems: string[] = ["Teams", "Add People", "People List", ];
   getIconClass(item: string): string {
     this.selectedSidebarItem = item;
     switch (item) {
-      case "Projects I Own":
-        return "fa fa-user-circle"; // Replace with the desired icon class for "Projects I Own"
-      case "Projects I'm On":
-        return "fa fa-user-circle"; // Replace with the desired icon class for "Projects I'm On"
-      case "All Projects":
-        return "fa fa-users"; // Replace with the desired icon class for "All Projects"
+      case "Teams":
+        return "fa fa-users"; // Replace with the desired icon class for "Projects I Own"
+      case "Add People":
+        return "fa fa-plus-circle"; // Replace with the desired icon class for "Projects I'm On"
+      case "People List":
+        return "fa fa-list-ul"; // Replace with the desired icon class for "All Projects"
       default:
         return "";
     }
@@ -242,7 +244,7 @@ export class SidebarComponent implements OnInit {
   
  getAllProjects() {
   const apiUrl = this.apiService.apiUrl;
-  this.http.get(apiUrl+'/api/project/list-all').subscribe(
+  this.http.get(apiUrl+'/api/people/list-all').subscribe(
     (response) => {
       // Handle the successful response
       const projectData = response as any[]; // Assuming the response is an array of projects
@@ -288,6 +290,4 @@ processProjects(projects: any[]): PeriodicElement[] {
   return processedProjects;
 }
 
-  
-  
 }
