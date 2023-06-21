@@ -19,7 +19,7 @@ export class ServiceComponent {
     this.projects = data;
    
   }
-   apiUrl = 'http://localhost:8080';
+   apiUrl = 'https://workluge-test-production.up.railway.app';
   getProjects(): any[] {
     return this.projects;
   }

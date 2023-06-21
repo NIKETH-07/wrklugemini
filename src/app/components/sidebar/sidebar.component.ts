@@ -94,9 +94,9 @@ export class SidebarComponent implements OnInit {
     this.selectedSidebarItem = item;
     switch (item) {
       case "Projects I Own":
-        return "fa fa-user-circle"; // Replace with the desired icon class for "Projects I Own"
+        return "fa fa-user-circle fa-lg"; // Replace with the desired icon class for "Projects I Own"
       case "Projects I'm On":
-        return "fa fa-user-circle"; // Replace with the desired icon class for "Projects I'm On"
+        return "fa fa-user-circle fa-lg"; // Replace with the desired icon class for "Projects I'm On"
       case "All Projects":
         return "fa fa-users"; // Replace with the desired icon class for "All Projects"
       default:

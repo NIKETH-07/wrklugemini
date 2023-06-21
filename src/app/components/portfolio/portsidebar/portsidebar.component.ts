@@ -92,7 +92,7 @@ export class PortsidebarComponent {
     this.selectedSidebarItem = item;
     switch (item) {
       case "Portfolios I Own":
-        return "fa fa-address-card"; // Replace with the desired icon class for "Projects I Own"
+        return "fa fa-address-card fa-lg"; // Replace with the desired icon class for "Projects I Own"
      // Replace with the desired icon class for "Projects I'm On"
       case "All Portfolios":
         return "fa fa-users"; // Replace with the desired icon class for "All Projects"
@@ -131,7 +131,7 @@ export class PortsidebarComponent {
 
   onDialog(): void {
     const selectedRowData = this.selection.selected[0];
-  
+    console.log('Selected row data:', selectedRowData);
     const dialogRef = this.dialog.open(EditDialog, {
       width: '700px',
       data:selectedRowData,

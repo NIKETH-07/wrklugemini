@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ServiceComponent } from '../../service/service.component';
 import { DialogContentExampleDialog, AddDialogContentExampleDialog } from '../../sidebar/dialog/dialog.component';
+import { EditDialog, PeopleDialogComponent } from '../people-dialog/people-dialog.component';
 
 
 
@@ -16,7 +17,8 @@ export interface PeriodicElement {
   description: string;
   date:string;
   percent:string;
-  iddd:string;
+  peopleId:string;
+ 
   
   
 }
@@ -28,14 +30,16 @@ const ELEMENT_DATA: PeriodicElement[] = [
      description: 'new project',
      date:'2/203/23',
      percent:'100%',
-     iddd:''
+     peopleId:'',
+   
     },{position: 0,
       name: 'wrkluge2', 
       owner: "jaik", 
       description: 'new project',
       date:'12/2/23',
       percent:'80%',
-      iddd:''
+      peopleId:'',
+      
      },
  
   
@@ -59,7 +63,7 @@ export class PeoplesidebarComponent {
 
 
   displayedColumns: string[] = ['select',  'name', 'owner', 'description','percent','date'];
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+  dataSource: MatTableDataSource<PeriodicElement> = new MatTableDataSource<PeriodicElement>();
   selection = new SelectionModel<PeriodicElement>(true, []);
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -96,11 +100,11 @@ export class PeoplesidebarComponent {
     this.selectedSidebarItem = item;
     switch (item) {
       case "Teams":
-        return "fa fa-users"; // Replace with the desired icon class for "Projects I Own"
+        return "fa fa-users "; // Replace with the desired icon class for "Projects I Own"
       case "Add People":
-        return "fa fa-plus-circle"; // Replace with the desired icon class for "Projects I'm On"
+        return "fa fa-plus-circle fa-lg"; // Replace with the desired icon class for "Projects I'm On"
       case "People List":
-        return "fa fa-list-ul"; // Replace with the desired icon class for "All Projects"
+        return "fa fa-list-ul fa-lg"; // Replace with the desired icon class for "All Projects"
       default:
         return "";
     }
@@ -120,11 +124,13 @@ export class PeoplesidebarComponent {
     const selectedRowData = this.selection.selected[0];
   
    
-    const dialogRef = this.dialog.open(DialogContentExampleDialog, {
+    const dialogRef = this.dialog.open(PeopleDialogComponent, {
       width: '700px', 
       data: selectedRowData ,
     });
-  
+    dialogRef.componentInstance.peopleAdded.subscribe(() => {
+      this.getAllProjects();
+    });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed', result);
@@ -134,27 +140,18 @@ export class PeoplesidebarComponent {
   
 
   onDialog(): void {
-  //   const dialogRef = this.dialog.open(AddDialogContentExampleDialog, {
-  //     data: {} // Pass an empty object or provide any initial data if needed
-  //   });
-  
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     if (result) {
-  //       console.log(result.name);
-  //       console.log(result.owner);
-  //       console.log(result.description);
-  //       // Access other fields
-  //     }
-  //   });
-  // }
-  
-    const dialogRef = this.dialog.open(AddDialogContentExampleDialog, {
+    const selectedRowData = this.selection.selected[0];
+    console.log('Selected row data:', selectedRowData);
+    const dialogRef = this.dialog.open(EditDialog, {
       width: '700px',
-      data: {}
+      data:selectedRowData,
     });
-    dialogRef.componentInstance.projectAdded.subscribe(() => {
+
+    dialogRef.componentInstance.peopleEdited.subscribe(() => {
       this.getAllProjects();
     });
+
+    
   
     dialogRef.afterClosed().subscribe(result => {
       this.getAllProjects();
@@ -170,7 +167,8 @@ export class PeoplesidebarComponent {
         description: result.description,
         date:result.planstart,
         percent:result.percent,
-        iddd:result
+        peopleId:result.peopleId
+       
       };
 
       // Add the new project to the table's data source
@@ -198,19 +196,17 @@ export class PeoplesidebarComponent {
     console.log(this.isRowSelected); // Update the isRowSelected variable
   
     if (this.isRowSelected) {
-      console.log('rowww', row.iddd);
-      localStorage.setItem('idd',this.selection.selected[0].iddd) 
-      
-      // Log the selected row data
+      console.log('portid', row.peopleId);
+      localStorage.setItem('peopleid',this.selection.selected[0].peopleId) // Log the selected row data
     }
   }
 
   deleteSelectedRow() {
-    const ID = this.selection.selected[0].iddd;
-    localStorage.setItem('idd',this.selection.selected[0].iddd)
+    const ID = this.selection.selected[0].peopleId;
+    localStorage.setItem('peopleid',this.selection.selected[0].peopleId)
     // Get the selected row(s) from the selection model
     const selectedRows = this.selection.selected;
-  console.log('ro',this.selection.selected[0].iddd)
+ // console.log('ro',this.selection.selected[0].iddd)
     // Perform the deletion logic here, e.g., remove the selected row(s) from your data source
     for (const row of selectedRows) {
       // Assuming dataSource is your MatTableDataSource instance
@@ -223,13 +219,13 @@ export class PeoplesidebarComponent {
     
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const deleteapi = this.apiService.apiUrl;
-    this.http.delete(deleteapi +'/api/project/delete'+ '/' + ID, {
+    this.http.delete(deleteapi +'/api/people/delete'+ '/' +ID, {
       headers
 }).subscribe(
       (response) => {
         // Handle the successful login response
         console.log(response);
-        alert('Project Delete Successfully')
+        alert('Person Delete Successfully')
          
       },
       (error) => {
@@ -242,52 +238,47 @@ export class PeoplesidebarComponent {
   }
  
   
- getAllProjects() {
-  const apiUrl = this.apiService.apiUrl;
-  this.http.get(apiUrl+'/api/people/list-all').subscribe(
-    (response) => {
-      // Handle the successful response
-      const projectData = response as any[]; // Assuming the response is an array of projects
-      console.log(projectData);
-      
-      this.projectService.updateProjects(projectData);
-      // Call the processProjects function and store the result in processedProjects property
-      this.dataSource.data = this.processProjects(projectData);
+  getAllProjects(): void {
+    const apiUrl = this.apiService.apiUrl;
+    this.http.get(apiUrl+'/api/people/list-all').subscribe(
+      (response) => {
+        // Handle the successful response
+        const projectData = response as  { people: PeriodicElement[] }; // Assuming the response is an array of projects
+        console.log( "people respo", projectData);
+        
+        
+        this.processProjects(projectData.people);
+        // Use the processed projects data to update ELEMENT_DATA
+       
+  
+        
+      },
+      (error) => {
+        // Handle the error response
+        console.error(error);
+      }
+    );
+  }
+  
+  processProjects(projects: any[]): void {
+    if (Array.isArray(projects)) {
+      const processedProjects: PeriodicElement[] = projects.map((project, index) => ({
+        position: index + 1,
+        name: project.name,
+        owner: project.jobInfo,
+        description: project.email,
+        date: project.address,
+        percent: project.phone,
+        peopleId: project.peopleId
 
-      // Use the processed projects data to update ELEMENT_DATA
-     
-console.log('serviceeee',this.projectService)
-      console.table(ELEMENT_DATA);
-    },
-    (error) => {
-      // Handle the error response
-      console.error(error);
+      }));
+  
+      this.dataSource.data = processedProjects;
+      console.table(this.dataSource.data)
+    } else {
+      console.error('projects is not an array:', projects);
     }
-  );
-}
-showingResults: number = 5;
-processProjects(projects: any[]): PeriodicElement[] {
-  // Perform any further operations with the projects data
-
-  console.log("Processing projects:", projects);
-  // You can store the projects in a variable or use them directly in this function or pass them to another function
-  // Example:
-  const filteredProjects = projects.filter(project => project.status === 'active'&&'inactive');
-  console.log("Filtered projects:", filteredProjects);
-
-  const processedProjects: PeriodicElement[] = projects.map((project, index) => ({
-    
-    position: index,
-    name: project.projectName,
-    owner: project.projectOwner.name,
-    description: project.projectDescription,
-    date: project.projectedStartDate,
-    percent: project.status === "active" ? "100%" : "0%",
-    iddd:project.projectId
-    
-  }));
-
-  return processedProjects;
-}
+  }
+  
 
 }

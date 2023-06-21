@@ -37,6 +37,7 @@ import {   ServiceComponent } from './components/service/service.component';
 import { PortDialogComponent } from './components/portfolio/port-dialog/port-dialog.component';
 import { PeopleComponent } from './components/people/people.component';
 import { PeoplesidebarComponent } from './components/people/peoplesidebar/peoplesidebar.component';
+import { PeopleDialogComponent } from './components/people/people-dialog/people-dialog.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { PeoplesidebarComponent } from './components/people/peoplesidebar/people
     ServiceComponent,
     PortDialogComponent,
     PeopleComponent,
-    PeoplesidebarComponent
+    PeoplesidebarComponent,
+    PeopleDialogComponent
   ],
   imports: [
     BrowserModule,
