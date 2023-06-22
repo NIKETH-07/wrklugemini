@@ -38,6 +38,8 @@ import { PortDialogComponent } from './components/portfolio/port-dialog/port-dia
 import { PeopleComponent } from './components/people/people.component';
 import { PeoplesidebarComponent } from './components/people/peoplesidebar/peoplesidebar.component';
 import { PeopleDialogComponent } from './components/people/people-dialog/people-dialog.component';
+import { TaskComponent } from './components/projects/task/task.component';
+import { AdddialogComponent } from './components/projects/task/adddialog/adddialog.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +56,9 @@ import { PeopleDialogComponent } from './components/people/people-dialog/people-
     PortDialogComponent,
     PeopleComponent,
     PeoplesidebarComponent,
-    PeopleDialogComponent
+    PeopleDialogComponent,
+    TaskComponent,
+    AdddialogComponent
   ],
   imports: [
     BrowserModule,

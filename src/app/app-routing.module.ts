@@ -8,6 +8,7 @@ import { LoginSignupComponent } from './components/login-signup/login-signup.com
 import { ProjectsComponent } from './components/projects/projects.component';
 import { PortfolioComponent } from './components/portfolio/portfolio.component';
 import { PeopleComponent } from './components/people/people.component';
+import { TaskComponent } from './components/projects/task/task.component';
 
 const routes: Routes = [
   { path: '', component: AppComponent,
@@ -18,7 +19,8 @@ children:[
 { path: 'signup', component: SignupComponent},
 { path: 'projects', component: ProjectsComponent},
 { path: 'portfolio', component: PortfolioComponent},
-{ path: 'people', component: PeopleComponent}
+{ path: 'people', component: PeopleComponent},
+{ path: 'task', component: TaskComponent}
 ]
  },
 
