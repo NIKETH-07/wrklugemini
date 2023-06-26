@@ -1,6 +1,6 @@
 
-
-
+<app-topbar></app-topbar>
+<div style="padding-bottom: 2px;"></div>
 <mat-drawer-container class="example-container">
     <mat-drawer mode="side" opened class="sidebar">
       <ul >
@@ -17,9 +17,9 @@
         <mat-card class="card">
             <mat-card-header>
                 
-                <div style="font-weight: 550; font-size:x-large; color: #34347a;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">assignment_add </div></mat-card-header>
+                <div style="font-weight: 550; font-size:x-large; color: #34347a;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">assignment_add:- {{selectedRow}} </div></mat-card-header>
                 <mat-card-content class="first card">
-                <div style="font-weight: 550; font-size:large; color: #34347a;margin-top: 30px;">badge </div>
+                <div style="font-weight: 550; font-size:large; color: #34347a;margin-top: 48px;">badge:- {{selectedRowuser}} </div>
              </mat-card-content>
               
             <br></mat-card>
@@ -149,12 +149,23 @@
           
           <ng-container matColumnDef="no" >
             <th mat-header-cell *matHeaderCellDef class="column-cell"> no# </th>
-            <td mat-cell *matCellDef="let element" class="column-cell"> {{element.no}} </td>
+            <td mat-cell *matCellDef="let data" class="column-cell"> 
+              <button mat-icon-button 
+                      [style.visibility]="!data.expandable ? 'hidden' : ''"
+                      [style.marginLeft.px]="data.level * 32"
+                      (click)="treeControl.toggle(data)">
+                <mat-icon class="mat-icon-rtl-mirror">
+                  {{treeControl.isExpanded(data) ? 'expand_more' : 'chevron_right'}}
+                </mat-icon>
+              </button>
+        
+              {{data.no}}
+            </td>
           </ng-container>
           <!-- Name Column -->
           <ng-container matColumnDef="name" >
             <th mat-header-cell *matHeaderCellDef class="column-cell"> Name </th>
-            <td mat-cell *matCellDef="let element" class="column-cell"> {{element.name}} </td>
+            <td mat-cell *matCellDef="let data" class="column-cell"> {{data.name}} </td>
           </ng-container>
         
           <!-- Weight Column -->
@@ -193,12 +204,16 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"
               (click)=" onRowClick(row) "   [class.selected]="selection.isSelected(row)  " >
           </tr>
+
+          <tr class="end-table-line"></tr>
         </table>
+          
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+
+        
         </div>
       </div>
     </mat-drawer-content>
   </mat-drawer-container>
-  
-  
   
   

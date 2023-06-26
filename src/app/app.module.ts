@@ -40,6 +40,9 @@ import { PeoplesidebarComponent } from './components/people/peoplesidebar/people
 import { PeopleDialogComponent } from './components/people/people-dialog/people-dialog.component';
 import { TaskComponent } from './components/projects/task/task.component';
 import { AdddialogComponent } from './components/projects/task/adddialog/adddialog.component';
+import {MatTreeModule} from '@angular/material/tree';
+import {CdkTreeModule} from '@angular/cdk/tree';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -58,7 +61,9 @@ import { AdddialogComponent } from './components/projects/task/adddialog/adddial
     PeoplesidebarComponent,
     PeopleDialogComponent,
     TaskComponent,
-    AdddialogComponent
+    AdddialogComponent,
+    
+    
   ],
   imports: [
     BrowserModule,
@@ -84,7 +89,9 @@ import { AdddialogComponent } from './components/projects/task/adddialog/adddial
     MatSelectModule,
     MatDialogModule,
     MatButtonModule,
-    
+    MatTreeModule,
+    CdkTreeModule,
+    MatPaginatorModule
     
     
     

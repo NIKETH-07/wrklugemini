@@ -10,6 +10,8 @@ import { PortfolioComponent } from './components/portfolio/portfolio.component';
 import { PeopleComponent } from './components/people/people.component';
 import { TaskComponent } from './components/projects/task/task.component';
 
+
+
 const routes: Routes = [
   { path: '', component: AppComponent,
 children:[
@@ -20,7 +22,8 @@ children:[
 { path: 'projects', component: ProjectsComponent},
 { path: 'portfolio', component: PortfolioComponent},
 { path: 'people', component: PeopleComponent},
-{ path: 'task', component: TaskComponent}
+{ path: 'task', component: TaskComponent},
+
 ]
  },
 

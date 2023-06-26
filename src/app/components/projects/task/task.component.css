@@ -50,10 +50,11 @@
   }
   
   .card {
-    height: 110px;
+    height: 115px;
+   background: #ecf1f3;
   }
   .car {
-    height:60;
+    height:90px;
   }
   
   
@@ -178,7 +179,8 @@
   
   .table-container {
     width: 100%;
-    overflow-x: auto;
+    overflow: auto;
+    max-height: 400px;
   }
   .search-container {
     display: flex;
@@ -193,5 +195,36 @@
     background-color: #bdfa61;
   }
   
+  
+  .example-tree-invisible {
+    display: none;
+  }
+  
+  .example-tree ul,
+  .example-tree li {
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style-type: none;
+  }
+  
+  /*
+   * This padding sets alignment of the nested nodes.
+   */
+  .example-tree .mat-nested-tree-node div[role=group] {
+    padding-left: 40px;
+  }
+  
+  /*
+   * Padding for leaf nodes.
+   * Leaf nodes need to have padding so as to align with other non-leaf nodes
+   * under the same parent.
+   */
+  .example-tree div[role=group] > .mat-tree-node {
+    padding-left: 40px;
+  }
+   
+  .end-table-line {
+    border-bottom: 1px solid #131212;
+  }
   
   

@@ -22,16 +22,16 @@ export interface PeriodicElement {
 
 const ELEMENT_DATA: PeriodicElement[] = [
   {position: 0,
-     name: 'wrkluge', 
-     owner: "nik", 
-     description: 'new project',
+     name: 'workluge', 
+     owner: "john", 
+     description: 'Human resource management',
      date:'2/203/23',
      percent:'100%',
      iddd:''
     },{position: 0,
-      name: 'wrkluge2', 
+      name: 'eLOG', 
       owner: "jaik", 
-      description: 'new project',
+      description: 'Employes workes monitoring',
       date:'12/2/23',
       percent:'80%',
       iddd:''
@@ -49,6 +49,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
 export class SidebarComponent implements OnInit {
   isRowSelected: boolean = false;
   selectedSidebarItem!: string;
+  lastClickTime: number | undefined;
+
 
   ngOnInit(): void {
     this.getAllProjects();
@@ -132,19 +134,7 @@ export class SidebarComponent implements OnInit {
   
 
   onDialog(): void {
-  //   const dialogRef = this.dialog.open(AddDialogContentExampleDialog, {
-  //     data: {} // Pass an empty object or provide any initial data if needed
-  //   });
   
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     if (result) {
-  //       console.log(result.name);
-  //       console.log(result.owner);
-  //       console.log(result.description);
-  //       // Access other fields
-  //     }
-  //   });
-  // }
   
     const dialogRef = this.dialog.open(AddDialogContentExampleDialog, {
       width: '700px',
@@ -196,11 +186,20 @@ export class SidebarComponent implements OnInit {
     console.log(this.isRowSelected); // Update the isRowSelected variable
   
     if (this.isRowSelected) {
-      console.log('rowww', row.iddd);
-      localStorage.setItem('idd',this.selection.selected[0].iddd) 
-      
-      // Log the selected row data
+      const doubleClickDelayMs = 1500; // Adjust the delay as needed
+    if (this.lastClickTime && (new Date().getTime() - this.lastClickTime) < doubleClickDelayMs) {
+      // Double click occurred
+      console.log('Double click');
+      localStorage.setItem('idd', this.selection.selected[0].iddd);
+      localStorage.setItem('selectedRow', JSON.stringify(this.selection.selected[0].name));
+      localStorage.setItem('selectedRowuser', JSON.stringify(this.selection.selected[0].owner));
+      this.router.navigate(['/task']);
+    } else {
+      // Single click occurred
+      console.log('Single click');
     }
+    this.lastClickTime = new Date().getTime();
+  }
   }
 
   deleteSelectedRow() {

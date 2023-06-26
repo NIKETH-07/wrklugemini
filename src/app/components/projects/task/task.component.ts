@@ -1,12 +1,14 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ServiceComponent } from '../../service/service.component';
 import { DialogContentExampleDialog, AddDialogContentExampleDialog } from '../../sidebar/dialog/dialog.component';
 import { AdddialogComponent, TaskDialog } from './adddialog/adddialog.component';
+import { FlatTreeControl } from '@angular/cdk/tree';
+import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 
 
 
@@ -21,63 +23,122 @@ export interface PeriodicElement {
   starton:string;
   no:number
   taskid:''
+  children?: PeriodicElement[];
+  
   
   
   
 }
 
+
 const ELEMENT_DATA: PeriodicElement[] = [
   {position: 0,
-     name: 'wrkluge', 
-     assignment: "nik", 
-     duration: 'new project',
-     planhour:'2/203/23',
+     name: 'Workluge',
+     children: [
+      { name: 'workluge 2',position: 0,assignment: "jaffer",duration: '22',planhour:'14',percent:'100%',dueon:'10/02/2023',starton:'01/02/2023',no:1,taskid:'' },
+      { name: 'workluge 3',position: 1,assignment: "jan",duration: '24',planhour:'17',percent:'80%',dueon:'11/02/2023',starton:'02/02/2023',no:2,taskid:'' },
+
+     
+    ],
+     
+     assignment: "john", 
+     duration: '20',
+     planhour:'20',
      percent:'100%',
-      dueon:'',
-     starton:'',
+      dueon:'10/02/2023',
+     starton:'01/02/2023',
      no:0,
      taskid:''
     
-    },{position: 0,
-      name: 'wrkluge2', 
+    },{position: 1,
+      name: 'eLOG', 
       assignment: "jaik", 
-      duration: 'new project',
-      planhour:'12/2/23',
+      duration: '15',
+      planhour:'10',
       percent:'80%',
      
-      dueon:'',
-      starton:'',
-     no:0,
+      dueon:'20/06/2023',
+      starton:'1/6/2023',
+     no:1,
      taskid:''
      },
- 
-  
-  
-];
+ ];
+
+
+ interface ExampleFlatNode extends PeriodicElement {
+  expandable: boolean;
+  level: number;
+}
 
 @Component({
   selector: 'app-task',
   templateUrl: './task.component.html',
   styleUrls: ['./task.component.css']
 })
-export class TaskComponent {
-
+export class TaskComponent implements OnInit {
+  selectedRow: PeriodicElement | undefined;
+  selectedRowuser: PeriodicElement | undefined;
 
   isRowSelected: boolean = false;
   selectedSidebarItem!: string;
 
   ngOnInit(): void {
     this.getAllProjects();
-  
+    
+    const selectedRowData = localStorage.getItem('selectedRow');
+    if (selectedRowData) {
+      this.selectedRow = JSON.parse(selectedRowData);
+      console.log('route',this.selectedRow)
+    }
+
+    const selectedRowDataowner = localStorage.getItem('selectedRowuser');
+    if (selectedRowDataowner) {
+      this.selectedRowuser = JSON.parse(selectedRowDataowner);
+      console.log('route',this.selectedRow)
+    }
   }
+  
 
 
   displayedColumns: string[] = ['select','no',  'name', 'assignment', 'duration','planhour','starton','dueon','percent'];
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+
+  private transformer = (node: PeriodicElement, level: number) => {
+    return {
+      expandable: !!node.children && node.children.length > 0,
+      name: node.name,
+      assignment:node.assignment,
+      duration:node.duration,
+      planhour:node.planhour,
+      starton:node.starton,
+      dueon:node.dueon,
+      percent:node.percent,
+      no:node.no,
+      position:node.position,
+      taskid:node.taskid,
+level: level,
+    };
+  };
+
+  treeControl = new FlatTreeControl<ExampleFlatNode>(
+    (node) => node.level,
+    (node) => node.expandable
+  );
+
+  treeFlattener = new MatTreeFlattener<PeriodicElement, ExampleFlatNode>(
+    this.transformer,
+    (node) => node.level,
+    (node) => node.expandable,
+    (node) => node.children
+  );
+
+  dataSource = new MatTreeFlatDataSource<PeriodicElement, ExampleFlatNode>(
+    this.treeControl,
+    this.treeFlattener
+  );
   selection = new SelectionModel<PeriodicElement>(true, []);
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  //  this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -139,7 +200,9 @@ export class TaskComponent {
   }
   
 
-  constructor(public dialog: MatDialog ,private router: Router,private http: HttpClient ,private projectService: ServiceComponent,private apiService: ServiceComponent) {}
+  constructor(public dialog: MatDialog ,private router: Router,private http: HttpClient ,private projectService: ServiceComponent,private apiService: ServiceComponent,) {
+    this.dataSource.data = ELEMENT_DATA;
+  }
 
   openDialog() {
    
@@ -197,7 +260,7 @@ export class TaskComponent {
       this.dataSource.data.push(newProject);
 
       // Refresh the table
-      this.dataSource._updateChangeSubscription();
+    //  this.dataSource._updateChangeSubscription();
     }
   });
  }
@@ -270,7 +333,8 @@ export class TaskComponent {
   this.http.get(apiUrl+'/api/task/list-all').subscribe(
     (response) => {
       // Handle the successful response
-      const projectData = response as any[]; // Assuming the response is an array of projects
+      const projectData = response as any[];
+       // Assuming the response is an array of projects
       console.log(projectData);
       
       this.projectService.updateProjects(projectData);
@@ -316,5 +380,5 @@ processProjects(projects: any[]): PeriodicElement[] {
 
   return processedProjects;
 }
-
+hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 }
