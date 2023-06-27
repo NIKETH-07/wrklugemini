@@ -181,6 +181,8 @@ align-items: center;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  padding-top:5px;
+  padding-bottom: 5px;
 }
 .header-row {
   background-color: #f0f0f0;
@@ -191,3 +193,10 @@ align-items: center;
 }
 
 
+.edit-input {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+}

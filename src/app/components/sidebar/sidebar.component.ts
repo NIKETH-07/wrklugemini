@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import {  ServiceComponent } from '../service/service.component';
 
 export interface PeriodicElement {
+  editMode: boolean;
   name: string;
   position: number;
   owner: string;
@@ -27,14 +28,16 @@ const ELEMENT_DATA: PeriodicElement[] = [
      description: 'Human resource management',
      date:'2/203/23',
      percent:'100%',
-     iddd:''
+     iddd:'',
+     editMode: false,
     },{position: 0,
       name: 'eLOG', 
       owner: "jaik", 
       description: 'Employes workes monitoring',
       date:'12/2/23',
       percent:'80%',
-      iddd:''
+      iddd:'',
+      editMode: false
      },
  
   
@@ -50,11 +53,23 @@ export class SidebarComponent implements OnInit {
   isRowSelected: boolean = false;
   selectedSidebarItem!: string;
   lastClickTime: number | undefined;
-
+  editMode:false | undefined;
 
   ngOnInit(): void {
     this.getAllProjects();
   
+  }
+  onEdit(element: PeriodicElement) {
+    // Enable edit mode for the selected row
+    element.editMode = true;
+  }
+
+  onSave(element: PeriodicElement) {
+    // Disable edit mode for the selected row and save the changes
+    element.editMode = false;
+
+    // Perform any additional logic here to save the changes, such as making an API call or updating the data source
+    console.log('Updated value:', element.name);
   }
 
 
@@ -156,9 +171,10 @@ export class SidebarComponent implements OnInit {
         name: result.name,
         owner: result.owner,
         description: result.description,
-        date:result.planstart,
-        percent:result.percent,
-        iddd:result
+        date: result.planstart,
+        percent: result.percent,
+        iddd: result,
+        editMode: false
       };
 
       // Add the new project to the table's data source
@@ -213,6 +229,8 @@ export class SidebarComponent implements OnInit {
       // Assuming dataSource is your MatTableDataSource instance
       this.dataSource.data = this.dataSource.data.filter((element) => element !== row);
     }
+
+    
   
     // Clear the selection after deletion
     this.selection.clear();
@@ -280,7 +298,8 @@ processProjects(projects: any[]): PeriodicElement[] {
     description: project.projectDescription,
     date: project.projectedStartDate,
     percent: project.status === "active" ? "100%" : "0%",
-    iddd:project.projectId
+    iddd:project.projectId,
+    editMode:project
     
   }));
 

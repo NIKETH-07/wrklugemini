@@ -84,6 +84,8 @@ export class TaskComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllProjects();
+
+    
     
     const selectedRowData = localStorage.getItem('selectedRow');
     if (selectedRowData) {
