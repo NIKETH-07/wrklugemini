@@ -152,36 +152,67 @@
   }
   .column-cell {
     border-right: 1px solid #ccc;
-    /* Or you can use padding instead of border */
-    /* padding-right: 10px; */
+    width:100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
   /* Apply border to the last cell in each row to complete the separation */
-  .column-cell:last-child {
-    border-right: none;
+ 
+  
+  .column-cell {
+    /* Define the width for the columns */
+    width: 150px; /* Adjust the width as needed */
   }
   
-  .match{
-    width: 30px;
+  .col {
+    /* Define the width for the columns */
+    width: 100px; /* Adjust the width as needed */
+  }
+  .co {
+    /* Define the width for the columns */
+    width: 60px; /* Adjust the width as needed */
   }
   
-  .description{
-    width: 270px;
+  .c {
+    /* Define the width for the columns */
+    width: 80px; /* Adjust the width as needed */
+  }
+
+  .match {
+    /* Define the width for the columns */
+    width: 55px; /* Adjust the width as needed */
+  }
+
+  .dura {
+    width: 58px; /* Adjust the width as needed */
+  }
+.plan {
+    width: 58px; /* Adjust the width as needed */
   }
   
-  .percent{
-    width: 150px;
+  .column-cell.date {
+    width: 75px; /* Adjust the width as needed */
   }
   
-  .date{
-    width: 100px;
-  }
   
   .table-container {
     width: 100%;
     overflow: auto;
     max-height: 400px;
+   
+    overflow-x: auto;
   }
+
+ .table {
+  table-layout: fixed;
+  /* Additional styles if needed */
+}
+
+
+
+
   .search-container {
     display: flex;
     flex-direction: column;
@@ -229,4 +260,12 @@
     border-bottom: 1px solid #131212;
   }
   
-  
+  .edit-input {
+    
+    background-color: transparent;
+    padding:7px;
+    width: 100%;
+    padding: 2px;
+    box-sizing: border-box;
+    
+  } 

@@ -62,12 +62,13 @@ export class SidebarComponent implements OnInit {
   onEdit(element: PeriodicElement) {
     // Enable edit mode for the selected row
     element.editMode = true;
+    
   }
 
   onSave(element: PeriodicElement) {
     // Disable edit mode for the selected row and save the changes
     element.editMode = false;
-
+this.inEditproject(element);
     // Perform any additional logic here to save the changes, such as making an API call or updating the data source
     console.log('Updated value:', element.name);
   }
@@ -75,10 +76,22 @@ export class SidebarComponent implements OnInit {
 
   displayedColumns: string[] = ['select',  'name', 'owner', 'description','percent','date'];
   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+
+  totalItems: number = 0;
+  pageIndex: number = 0;
+  pageSize: number = 5;
+
   selection = new SelectionModel<PeriodicElement>(true, []);
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+
+  onPageChange(event: any) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.getAllProjects();
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -199,18 +212,23 @@ export class SidebarComponent implements OnInit {
     this.selection.toggle(row); // Toggle the row selection
     
     this.isRowSelected = this.selection.isSelected(row);
+   
     console.log(this.isRowSelected); // Update the isRowSelected variable
-  
+  console.log('sele',  this.selection.selected)
+  console.log('ro',this.selection.selected[0].iddd)
+  localStorage.setItem('idd',this.selection.selected[0].iddd)
     if (this.isRowSelected) {
       const doubleClickDelayMs = 1500; // Adjust the delay as needed
     if (this.lastClickTime && (new Date().getTime() - this.lastClickTime) < doubleClickDelayMs) {
       // Double click occurred
       console.log('Double click');
-      localStorage.setItem('idd', this.selection.selected[0].iddd);
+      
+      
       localStorage.setItem('selectedRow', JSON.stringify(this.selection.selected[0].name));
       localStorage.setItem('selectedRowuser', JSON.stringify(this.selection.selected[0].owner));
       this.router.navigate(['/task']);
     } else {
+      
       // Single click occurred
       console.log('Single click');
     }
@@ -220,7 +238,7 @@ export class SidebarComponent implements OnInit {
 
   deleteSelectedRow() {
     const ID = this.selection.selected[0].iddd;
-    localStorage.setItem('idd',this.selection.selected[0].iddd)
+  
     // Get the selected row(s) from the selection model
     const selectedRows = this.selection.selected;
   console.log('ro',this.selection.selected[0].iddd)
@@ -259,7 +277,12 @@ export class SidebarComponent implements OnInit {
   
  getAllProjects() {
   const apiUrl = this.apiService.apiUrl;
-  this.http.get(apiUrl+'/api/project/list-all').subscribe(
+  const requestData = {
+    onset: this.pageIndex * this.pageSize,
+    offset: this.pageSize
+  };
+
+  this.http.post(apiUrl+'/api/project/list-all', requestData).subscribe(
     (response) => {
       // Handle the successful response
       const projectData = response as any[]; // Assuming the response is an array of projects
@@ -299,13 +322,50 @@ processProjects(projects: any[]): PeriodicElement[] {
     date: project.projectedStartDate,
     percent: project.status === "active" ? "100%" : "0%",
     iddd:project.projectId,
-    editMode:project
+    editMode:false
     
   }));
-
+  this.totalItems = filteredProjects.length;
   return processedProjects;
 }
 
-  
+ 
+inEditproject(element: PeriodicElement) {
+  // Get the necessary data from the element and make the API request
+  const IDD = element.iddd;
+  const token = localStorage.getItem('token');
+  const id = localStorage.getItem('userId');
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  const editproject = this.apiService.apiUrl;
+  const mail = localStorage.getItem('EMAIL');
+
+  const requestBody = {
+    status: 'active',
+    projectName: element.name,
+    projectDescription: element.description,
+    projectDuration: 15,
+    portfolioId: '0007',
+    projectOwner: {
+      _id: id,
+      name: element.owner,
+      email: mail
+    },
+    projectedStartDate: element.date,
+    projectedCompletionDate: element.percent
+  };
+
+  this.http.put(editproject + '/api/project/update' + '/' + IDD, requestBody, { headers }).subscribe(
+    (response) => {
+      // Handle the successful response
+      console.log(response);
+     
+    },
+    (error) => {
+      // Handle the error response
+      console.error(error);
+    }
+  );
+}
+
   
 }

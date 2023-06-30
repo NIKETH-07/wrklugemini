@@ -43,6 +43,9 @@ import { AdddialogComponent } from './components/projects/task/adddialog/adddial
 import {MatTreeModule} from '@angular/material/tree';
 import {CdkTreeModule} from '@angular/cdk/tree';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import { AuthComponent } from './components/service/auth/auth.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 @NgModule({
   declarations: [
@@ -62,6 +65,8 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     PeopleDialogComponent,
     TaskComponent,
     AdddialogComponent,
+    AuthComponent,
+   
     
     
   ],
@@ -91,7 +96,9 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     MatButtonModule,
     MatTreeModule,
     CdkTreeModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatTooltipModule
+    
     
     
     

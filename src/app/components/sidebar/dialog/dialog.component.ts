@@ -28,7 +28,7 @@ export class DialogComponent {
   }
   Editproject() {
     
-    const idd = localStorage.getItem('idd')
+    const IDD = localStorage.getItem('idd')
     const token =  localStorage.getItem('token');
     const id = localStorage.getItem('userId')
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
@@ -49,17 +49,18 @@ export class DialogComponent {
       projectedCompletionDate: this.data.percent
     };
 
-    this.http.put(editproject + '/api/project/update'+ '/' + idd, requestBody, { headers }).subscribe(
+    this.http.put(editproject + '/api/project/update'+ '/' + IDD, requestBody, { headers }).subscribe(
       (response) => {
         // Handle the successful login response
         console.log(response);
         
         alert('Project Update Successfully')
+      
         this.projectAdded.emit();
         
       },
       (error) => {
-        // Handle the error response
+       
         console.error(error);
        
       }
@@ -93,7 +94,7 @@ export class DialogContentExampleDialog {
 
   Editproject() {
     
-   const idd = localStorage.getItem('idd')
+    const IDD = localStorage.getItem('idd')
     const token =  localStorage.getItem('token');
     const id = localStorage.getItem('userId')
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
@@ -114,7 +115,7 @@ export class DialogContentExampleDialog {
       projectedCompletionDate: this.data.percent
     };
 
-    this.http.put(editproject + '/api/project/update'+ '/' + idd, requestBody, { headers }).subscribe(
+    this.http.put(editproject + '/api/project/update'+ '/' + IDD, requestBody, { headers }).subscribe(
       (response) => {
         // Handle the successful login response
         console.log(response);
@@ -148,7 +149,7 @@ export class AddDialogContentExampleDialog {
   percent!: string;
   @Output() projectAdded: EventEmitter<void> = new EventEmitter<void>();
   constructor(
-    public dialog: MatDialog,private router: Router,private http: HttpClient ,private apiService: ServiceComponent,
+    public dialog: MatDialog,  @Inject(MAT_DIALOG_DATA) public data: any,private router: Router,private http: HttpClient ,private apiService: ServiceComponent,
    
     public dialogRef: MatDialogRef<AddDialogContentExampleDialog>
   ) { }

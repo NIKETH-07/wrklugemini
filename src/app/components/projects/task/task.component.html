@@ -115,7 +115,7 @@
         <div class="search-container">
         <form >
           <div class="input-container">
-            <input matInput (keyup)="applyFilter($event)" placeholder="Search" #input>
+<input type="text" (input)="applyFilter($event)" placeholder="Search" />
             <span class="suffix-icon">
               <i class="material-icons">search</i>
             </span>
@@ -124,7 +124,7 @@
         </div>
   
         <div class="table-container">
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 table" >
   
           <!-- Checkbox Column -->
           <ng-container matColumnDef="select">
@@ -147,14 +147,14 @@
         
           <!-- Position Column -->
           
-          <ng-container matColumnDef="no" >
-            <th mat-header-cell *matHeaderCellDef class="column-cell"> no# </th>
-            <td mat-cell *matCellDef="let data" class="column-cell"> 
+          <ng-container matColumnDef="no"  >
+            <th mat-header-cell *matHeaderCellDef class="column-cell  co" style="padding-left: 40px;"> no# </th>
+            <td mat-cell *matCellDef="let data" class="column-cell" co> 
               <button mat-icon-button 
                       [style.visibility]="!data.expandable ? 'hidden' : ''"
                       [style.marginLeft.px]="data.level * 32"
                       (click)="treeControl.toggle(data)">
-                <mat-icon class="mat-icon-rtl-mirror">
+                <mat-icon >
                   {{treeControl.isExpanded(data) ? 'expand_more' : 'chevron_right'}}
                 </mat-icon>
               </button>
@@ -164,40 +164,55 @@
           </ng-container>
           <!-- Name Column -->
           <ng-container matColumnDef="name" >
-            <th mat-header-cell *matHeaderCellDef class="column-cell"> Name </th>
-            <td mat-cell *matCellDef="let data" class="column-cell"> {{data.name}} </td>
+            <th mat-header-cell *matHeaderCellDef class="column-cell  col"> Name </th>
+            <td mat-cell *matCellDef="let data" class="column-cell"> 
+              <input *ngIf="data.editMode" [(ngModel)]="data.name" (keydown.enter)="onSave(data)"class="edit-input">
+              <div *ngIf="!data.editMode" (click)="onEdit(data)">{{ data.name }}</div> </td>
           </ng-container>
         
           <!-- Weight Column -->
           <ng-container matColumnDef="assignment">
-            <th mat-header-cell *matHeaderCellDef class="column-cell"> Assignment </th>
-            <td mat-cell *matCellDef="let element" class="column-cell"> {{element.assignment}} </td>
+            <th mat-header-cell *matHeaderCellDef class="column-cell c"> Assignment </th>
+            <td mat-cell *matCellDef="let element" class="column-cell"> 
+              <input *ngIf="element.editMode" [(ngModel)]="element.assignment" (keydown.enter)="onSave(element)"class="edit-input">
+              <div *ngIf="!element.editMode" (click)="onEdit(element)">{{ element.assignment }}</div> </td>
           </ng-container>
         
           <!-- Symbol Column -->
           <ng-container matColumnDef="duration">
-            <th mat-header-cell *matHeaderCellDef class="column-cell description"> Duration </th>
-            <td mat-cell *matCellDef="let element" class="column-cell  description"> {{element.duration}} </td>
+            <th mat-header-cell *matHeaderCellDef class="column-cell dura"> Duration </th>
+            <td mat-cell *matCellDef="let element" class="column-cell  description">
+                <input *ngIf="element.editMode" [(ngModel)]="element.duration"(keydown.enter)="onSave(element)"class="edit-input">
+              <div *ngIf="!element.editMode" (click)="onEdit(element)">{{ element.duration }}</div> </td>
           </ng-container>
   
           <ng-container matColumnDef="planhour">
-            <th mat-header-cell *matHeaderCellDef class="column-cell percent"> Plan Hour </th>
-            <td mat-cell *matCellDef="let element" class="column-cell percent "> {{element.planhour}} </td>
+            <th mat-header-cell *matHeaderCellDef class="column-cell plan"> Plan Hour </th>
+            <td mat-cell *matCellDef="let element" class="column-cell percent "> 
+              <input *ngIf="element.editMode" [(ngModel)]="element.planhour" (keydown.enter)="onSave(element)"class="edit-input">
+              <div *ngIf="!element.editMode" (click)="onEdit(element)">{{ element.planhour }}</div>
+            </td>
           </ng-container>
   
           <ng-container matColumnDef="starton">
             <th mat-header-cell *matHeaderCellDef class="column-cell date ">  Start On </th>
-            <td mat-cell *matCellDef="let element" class="column-cell date "> {{element.starton}} </td>
+            <td mat-cell *matCellDef="let element" class="column-cell date "> 
+              <input *ngIf="element.editMode" [(ngModel)]="element.starton" (keydown.enter)="onSave(element)"class="edit-input">
+              <div *ngIf="!element.editMode" (click)="onEdit(element)">{{ element.starton }}</div> </td>
           </ng-container>
 
           <ng-container matColumnDef="dueon">
             <th mat-header-cell *matHeaderCellDef class="column-cell date ">  Due On </th>
-            <td mat-cell *matCellDef="let element" class="column-cell date "> {{element.dueon}} </td>
+            <td mat-cell *matCellDef="let element" class="column-cell date "> 
+              <input *ngIf="element.editMode" [(ngModel)]="element.dueon" (keydown.enter)="onSave(element)"class="edit-input">
+              <div *ngIf="!element.editMode" (click)="onEdit(element)">{{ element.dueon }}</div>  </td>
           </ng-container>
 
           <ng-container matColumnDef="percent">
             <th mat-header-cell *matHeaderCellDef class="column-cell date ">  Percent </th>
-            <td mat-cell *matCellDef="let element" class="column-cell date "> {{element.percent}} </td>
+            <td mat-cell *matCellDef="let element" class="column-cell date "> 
+              <input *ngIf="element.editMode" [(ngModel)]="element.percent" (keydown.enter)="onSave(element)"class="edit-input">
+              <div *ngIf="!element.editMode" (click)="onEdit(element)">{{ element.percent }}</div> </td>
           </ng-container>
         
           <tr mat-header-row *matHeaderRowDef="displayedColumns " class="header-row"></tr>
@@ -208,7 +223,13 @@
           <tr class="end-table-line"></tr>
         </table>
           
-  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        <mat-paginator
+        [length]="totalItems"
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        (page)="onPageChange($event)"
+      ></mat-paginator>
 
         
         </div>

@@ -15,6 +15,7 @@ export interface PeriodicElement {
   date:string;
   percent:string;
   portId:string;
+  editMode: boolean,
   
 }
 
@@ -46,22 +47,51 @@ export interface PeriodicElement {
 export class PortsidebarComponent {
   isRowSelected: boolean = false;
    selectedSidebarItem!: string;
+   editMode: boolean | undefined;
  
    ngOnInit(): void {
     this.getAllProjects();
   
   }
+  onEdit(element: PeriodicElement) {
+    // Enable edit mode for the selected row
+    element.editMode = true;
+  }
 
+  onSave(element: PeriodicElement) {
+    // Disable edit mode for the selected row and save the changes
+    element.editMode = false;
+    this.inEditproject(element)
+
+    // Perform any additional logic here to save the changes, such as making an API call or updating the data source
+    console.log('Updated value:', element.name);
+  }
 
 
   displayedColumns: string[] = ['select',  'name', 'owner', 'description','percent','date',];
   dataSource: MatTableDataSource<PeriodicElement> = new MatTableDataSource<PeriodicElement>();
+
+
+  totalItems: number = 0;
+  pageIndex: number = 0;
+  pageSize: number = 5;
+
+
  // dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
   selection = new SelectionModel<PeriodicElement>(true, []);
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
+
+
+  onPageChange(event: any) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.getAllProjects();
+  }
+
+
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
@@ -150,7 +180,8 @@ export class PortsidebarComponent {
         description: result.description,
         date:result.planstart,
         percent:result.percent,
-        portId:result.portId
+        portId:result.portId,
+        editMode:false
       };
 
       // Add the new project to the table's data source
@@ -215,7 +246,14 @@ export class PortsidebarComponent {
   
  getAllProjects() {
   const apiUrl = this.apiService.apiUrl;
-  this.http.get(apiUrl+'/api/portfolio/list-all').subscribe(
+  const requestData = {
+    onset: this.pageIndex * this.pageSize,
+    offset: this.pageSize
+  };
+
+
+
+  this.http.post(apiUrl+'/api/portfolio/list-all', requestData).subscribe(
     (response) => {
       // Handle the successful response
       const projectData = response as any[]; // Assuming the response is an array of projects
@@ -239,17 +277,56 @@ processProjects(projects: any[]): void {
   const processedProjects: PeriodicElement[] = projects.map((project, index) => ({
     position: index + 1,
     name: project.portfolioName,
-    owner: project.portfolioManager.name,
+    owner: "Job",
     description: project.portfolioDescription,
-    date: project.updatedAt.$date,
-    percent: project.createdAt.$date,
-    portId: project.portfolioId
+    date: project.updatedAt,
+    percent: project.createdAt,
+    portId: project.portfolioId,
+    editMode:false
   }));
 
   this.dataSource.data = processedProjects;
+  this.totalItems = projects.length;
 }
 
+inEditproject(element: PeriodicElement) {
+    
+  const idd = localStorage.getItem('portid')
+   const token =  localStorage.getItem('token');
+   const id = localStorage.getItem('userId')
+   const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+   const editproject = this.apiService.apiUrl;
+   const mail = localStorage.getItem('EMAIL')
+   const requestBody = {
+     portfolioDescription: element.description,
+     "status": "active",
+     portfolioName: element.name,
+     "projectId": {
+         "ids": [
+             "6544",
+             "5675",
+             "56724"
+         ]
+     }
+ }
 
+   this.http.put(editproject + '/api/portfolio/update'+ '/' + idd, requestBody, { headers }).subscribe(
+     (response) => {
+       // Handle the successful login response
+       console.log(response);
+       
+       
+       
+       
+     },
+     (error) => {
+       // Handle the error response
+       console.error(error);
+      
+     }
+   );
+ 
+ }
   
   
 }

@@ -58,6 +58,8 @@ export class LoginSignupComponent implements OnInit {
       (error) => {
         // Handle the error response
         console.error(error);
+        alert('User Not Found')
+        
       }
     );
     if (!this.loginForm.valid) {

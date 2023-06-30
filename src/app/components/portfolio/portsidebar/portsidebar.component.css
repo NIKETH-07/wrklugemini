@@ -205,4 +205,14 @@
   .selected {
     background-color: #bdfa61;
   }
+
+
+  .edit-input {
+    background-color: transparent;
+    padding:7px;
+    width: 100%;
+    padding: 2px;
+    box-sizing: border-box;
+  }
+  
   

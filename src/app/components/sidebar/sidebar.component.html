@@ -183,7 +183,16 @@
             (click)=" onRowClick(row) "   [class.selected]="selection.isSelected(row)  " >
         </tr>
       </table>
+      
       </div>
+      <mat-paginator
+  [length]="totalItems"
+  [pageIndex]="pageIndex"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="[5, 10, 25, 100]"
+  (page)="onPageChange($event)"
+></mat-paginator>
+
     </div>
   </mat-drawer-content>
 </mat-drawer-container>

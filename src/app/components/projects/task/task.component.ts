@@ -2,10 +2,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ServiceComponent } from '../../service/service.component';
-import { DialogContentExampleDialog, AddDialogContentExampleDialog } from '../../sidebar/dialog/dialog.component';
 import { AdddialogComponent, TaskDialog } from './adddialog/adddialog.component';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
@@ -13,6 +11,7 @@ import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree'
 
 
 export interface PeriodicElement {
+  editMode: boolean;
   name: string;
   position: number;
   assignment: string;
@@ -35,12 +34,12 @@ const ELEMENT_DATA: PeriodicElement[] = [
   {position: 0,
      name: 'Workluge',
      children: [
-      { name: 'workluge 2',position: 0,assignment: "jaffer",duration: '22',planhour:'14',percent:'100%',dueon:'10/02/2023',starton:'01/02/2023',no:1,taskid:'' },
-      { name: 'workluge 3',position: 1,assignment: "jan",duration: '24',planhour:'17',percent:'80%',dueon:'11/02/2023',starton:'02/02/2023',no:2,taskid:'' },
+      { name: 'workluge 2',position: 0,assignment: "jaffer",duration: '22',planhour:'14',percent:'100%',dueon:'10/02/2023',starton:'01/02/2023',no:1,taskid:'',editMode: false, },
+      { name: 'workluge 3',position: 1,assignment: "jan",duration: '24',planhour:'17',percent:'80%',dueon:'11/02/2023',starton:'02/02/2023',no:2,taskid:'',editMode: false, },
 
      
     ],
-     
+    editMode: false,
      assignment: "john", 
      duration: '20',
      planhour:'20',
@@ -51,6 +50,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
      taskid:''
     
     },{position: 1,
+      editMode: false,
       name: 'eLOG', 
       assignment: "jaik", 
       duration: '15',
@@ -78,14 +78,14 @@ const ELEMENT_DATA: PeriodicElement[] = [
 export class TaskComponent implements OnInit {
   selectedRow: PeriodicElement | undefined;
   selectedRowuser: PeriodicElement | undefined;
-
+  editMode: boolean | undefined;
   isRowSelected: boolean = false;
   selectedSidebarItem!: string;
+  filteredData: PeriodicElement[] = [];
+
 
   ngOnInit(): void {
     this.getAllProjects();
-
-    
     
     const selectedRowData = localStorage.getItem('selectedRow');
     if (selectedRowData) {
@@ -99,7 +99,19 @@ export class TaskComponent implements OnInit {
       console.log('route',this.selectedRow)
     }
   }
-  
+  onEdit(element: PeriodicElement) {
+    // Enable edit mode for the selected row
+    element.editMode = true;
+  }
+
+  onSave(element: PeriodicElement) {
+    // Disable edit mode for the selected row and save the changes
+    element.editMode = false;
+    this.inEdittask(element)
+
+    // Perform any additional logic here to save the changes, such as making an API call or updating the data source
+    console.log('Updated value:', element.name);
+  }
 
 
   displayedColumns: string[] = ['select','no',  'name', 'assignment', 'duration','planhour','starton','dueon','percent'];
@@ -117,6 +129,7 @@ export class TaskComponent implements OnInit {
       no:node.no,
       position:node.position,
       taskid:node.taskid,
+      editMode: node.editMode,
 level: level,
     };
   };
@@ -137,11 +150,62 @@ level: level,
     this.treeControl,
     this.treeFlattener
   );
+  totalItems: number = 0;
+  pageIndex: number = 0;
+  pageSize: number = 5;
+
+  
   selection = new SelectionModel<PeriodicElement>(true, []);
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-  //  this.dataSource.filter = filterValue.trim().toLowerCase();
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+  
+    if (filterValue) {
+      this.filteredData = this.filterTreeData(this.dataSource.data, filterValue);
+      this.dataSource.data = this.filteredData;
+    } else {
+      this.dataSource.data = ELEMENT_DATA;
+    }
   }
+  
+  filterTreeData(data: PeriodicElement[], filterValue: string): PeriodicElement[] {
+    const filteredData: PeriodicElement[] = [];
+  
+    data.forEach((node) => {
+      const newNode: PeriodicElement = { ...node };
+  
+      if (node.children) {
+        newNode.children = this.filterTreeData(node.children, filterValue);
+      }
+  
+      if (
+        newNode.name.toLowerCase().includes(filterValue) ||
+        newNode.assignment.toLowerCase().includes(filterValue) ||
+        (newNode.children && newNode.children.length > 0)
+      ) {
+        filteredData.push(newNode);
+      }
+    });
+  
+    return filteredData;
+  }
+  
+  
+  
+
+
+
+
+
+
+
+  
+
+  onPageChange(event: any) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.getAllProjects();
+  }
+
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
@@ -254,7 +318,8 @@ level: level,
         dueon:result.dueOn,
         starton:result.startOn,
         no:this.dataSource.data.length + 1,
-        taskid:result.taskId
+        taskid:result.taskId,
+        editMode: result
         
       };
 
@@ -318,6 +383,7 @@ level: level,
         // Handle the successful login response
         console.log(response);
         alert('Task Delete Successfully')
+        this.getAllProjects();
          
       },
       (error) => {
@@ -332,21 +398,23 @@ level: level,
   
  getAllProjects() {
   const apiUrl = this.apiService.apiUrl;
-  this.http.get(apiUrl+'/api/task/list-all').subscribe(
+  const requestData = {
+    onset: this.pageIndex * this.pageSize,
+    offset: this.pageSize
+  };
+  this.http.post(apiUrl+'/api/task/list-all', requestData).subscribe(
     (response) => {
       // Handle the successful response
       const projectData = response as any[];
        // Assuming the response is an array of projects
       console.log(projectData);
       
-      this.projectService.updateProjects(projectData);
-      // Call the processProjects function and store the result in processedProjects property
-      this.dataSource.data = this.processProjects(projectData);
-
-      // Use the processed projects data to update ELEMENT_DATA
-     
-console.log('serviceeee',this.projectService)
-      console.table(ELEMENT_DATA);
+      if (projectData.length > 0) {
+        this.projectService.updateProjects(projectData);
+        this.dataSource.data = this.processProjects(projectData);
+      } else {
+        this.dataSource.data = ELEMENT_DATA;
+      }
     },
     (error) => {
       // Handle the error response
@@ -365,22 +433,70 @@ processProjects(projects: any[]): PeriodicElement[] {
   console.log("Filtered projects:", filteredProjects);
 
   const processedProjects: PeriodicElement[] = projects.map((project, index) => ({
-    
     position: index,
     name: project.taskName,
-    assignment: project.assignee,
+    ...project,
+    assignment: project.assignee, // Access the name property of the assignee object
     duration: project.duration,
     planhour: project.planHours,
     percent: project.status === "active" ? "100%" : "0%",
-    starton:project.startOn,
-    dueon:project.dueOn,
-    no:index,
-    taskid:project.taskId
-    
-    
+    starton: project.startOn,
+    dueon: project.dueOn,
+    no: index,
+    taskid: project.taskId,
+    editMode: false
   }));
-
+  
+  
+  this.totalItems = filteredProjects.length;
+  this.filteredData = processedProjects;
   return processedProjects;
 }
 hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
+
+
+inEdittask(element:PeriodicElement) {
+    
+  const idd = localStorage.getItem('taskid')
+   const token =  localStorage.getItem('token');
+   const id = localStorage.getItem('userId')
+   const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+   const editproject = this.apiService.apiUrl;
+   const mail = localStorage.getItem('EMAIL')
+   const requestBody = {
+     "status": "inactive",
+     assignee: element.assignment,
+     planHours: element.planhour,
+     duration: element.duration,
+     startOn: element.starton,
+     dueOn: element.dueon,
+     taskName: element.name,
+     "description": "Test",
+     "createdBy": {
+       "_id": "0001",
+       "name": "User 4",
+       "email": "Use5.techintl@gmail.com"
+     },
+     "projectID": "122124"
+   }
+
+   this.http.put(editproject + '/api/task/edit'+ '/' + idd, requestBody, { headers }).subscribe(
+     (response) => {
+       // Handle the successful login response
+       console.log(response);
+       
+       alert('Project Update Successfully')
+      //  this.taskEdited.emit();
+      //  this.dialogRef.close();
+       
+     },
+     (error) => {
+       // Handle the error response
+       console.error(error);
+      
+     }
+   );
+ 
+ }
+
 }

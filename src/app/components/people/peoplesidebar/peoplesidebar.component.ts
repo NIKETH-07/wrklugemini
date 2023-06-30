@@ -18,6 +18,7 @@ export interface PeriodicElement {
   date:string;
   percent:string;
   peopleId:string;
+  editMode: boolean;
  
   
   
@@ -31,6 +32,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
      date:'2/203/23',
      percent:'100%',
      peopleId:'',
+     editMode:false
    
     },{position: 0,
       name: 'wrkluge2', 
@@ -39,6 +41,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
       date:'12/2/23',
       percent:'80%',
       peopleId:'',
+      editMode:false
       
      },
  
@@ -60,7 +63,23 @@ export class PeoplesidebarComponent {
     this.getAllProjects();
   
   }
+  onEdit(element: PeriodicElement) {
+    // Enable edit mode for the selected row
+    element.editMode = true;
+    
+  }
 
+  onSave(element: PeriodicElement) {
+    // Disable edit mode for the selected row and save the changes
+    element.editMode = false;
+this.inEditpeople(element);
+    // Perform any additional logic here to save the changes, such as making an API call or updating the data source
+    console.log('Updated value:', element.name);
+  }
+
+  totalItems: number = 0;
+  pageIndex: number = 0;
+  pageSize: number = 5;
 
   displayedColumns: string[] = ['select',  'name', 'owner', 'description','percent','date'];
   dataSource: MatTableDataSource<PeriodicElement> = new MatTableDataSource<PeriodicElement>();
@@ -68,6 +87,13 @@ export class PeoplesidebarComponent {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+
+  onPageChange(event: any) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.getAllProjects();
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -167,7 +193,8 @@ export class PeoplesidebarComponent {
         description: result.description,
         date:result.planstart,
         percent:result.percent,
-        peopleId:result.peopleId
+        peopleId:result.peopleId,
+        editMode:false
        
       };
 
@@ -240,7 +267,11 @@ export class PeoplesidebarComponent {
   
   getAllProjects(): void {
     const apiUrl = this.apiService.apiUrl;
-    this.http.get(apiUrl+'/api/people/list-all').subscribe(
+    const requestData = {
+      onset: this.pageIndex * this.pageSize,
+      offset: this.pageSize
+    };
+    this.http.post(apiUrl+'/api/people/list-all', requestData).subscribe(
       (response) => {
         // Handle the successful response
         const projectData = response as  { people: PeriodicElement[] }; // Assuming the response is an array of projects
@@ -269,16 +300,54 @@ export class PeoplesidebarComponent {
         description: project.email,
         date: project.address,
         percent: project.phone,
-        peopleId: project.peopleId
+        peopleId: project.peopleId,
+        editMode:false
 
       }));
   
       this.dataSource.data = processedProjects;
+      this.totalItems = projects.length;
       console.table(this.dataSource.data)
     } else {
       console.error('projects is not an array:', projects);
     }
   }
-  
+  inEditpeople(element:PeriodicElement) {
+    
+    const idd = localStorage.getItem('peopleid')
+     const token =  localStorage.getItem('token');
+     const id = localStorage.getItem('userId')
+     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+     const editproject = this.apiService.apiUrl;
+     const mail = localStorage.getItem('EMAIL')
+     const requestBody = {
+       name: element.name,
+       "isActive": false,
+       email: element.description,
+       phone: element.percent,
+       address: element.date,
+       "accesslevel": "Manager",
+       jobInfo: element.owner
+     }
+ 
+     this.http.put(editproject + '/api/people/update'+ '/' + idd, requestBody, { headers }).subscribe(
+       (response) => {
+         // Handle the successful login response
+         console.log(response);
+         
+         alert('Project Update Successfully')
+         this.getAllProjects()
+        //  this.peopleEdited.emit();
+        //  this.dialogRef.close();
+         
+       },
+       (error) => {
+         // Handle the error response
+         console.error(error);
+        
+       }
+     );
+   
+   }
 
 }
