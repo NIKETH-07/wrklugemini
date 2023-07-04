@@ -20,8 +20,8 @@
   
   /* Add a color to the active/current link */
   .circle {
-    width: 23px;
-    height: 23px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     background-color: #d3d4d4;
     color: #fff;

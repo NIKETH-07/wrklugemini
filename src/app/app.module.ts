@@ -45,7 +45,7 @@ import {CdkTreeModule} from '@angular/cdk/tree';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import { AuthComponent } from './components/service/auth/auth.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -97,7 +97,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTreeModule,
     CdkTreeModule,
     MatPaginatorModule,
-    MatTooltipModule
+    MatTooltipModule,
+    DragDropModule
     
     
     

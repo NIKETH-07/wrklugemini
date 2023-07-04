@@ -7,6 +7,8 @@ import { AddDialogContentExampleDialog, DialogComponent, DialogContentExampleDia
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import {  ServiceComponent } from '../service/service.component';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+
 
 export interface PeriodicElement {
   editMode: boolean;
@@ -82,6 +84,14 @@ this.inEditproject(element);
   pageSize: number = 5;
 
   selection = new SelectionModel<PeriodicElement>(true, []);
+
+
+  drop(event: CdkDragDrop<PeriodicElement[]>) {
+    moveItemInArray(this.dataSource.data, event.previousIndex, event.currentIndex);
+    this.dataSource.data = [...this.dataSource.data]; // Trigger change detection
+  }
+  
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -119,9 +129,11 @@ this.inEditproject(element);
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
-  sidebarItems: string[] = ["Projects I Own", "Projects I'm On", "All Projects", ];
+  sidebarItems  = ["Projects I Own", "Projects I'm On", "All Projects", ];
+  
   getIconClass(item: string): string {
     this.selectedSidebarItem = item;
+    
     switch (item) {
       case "Projects I Own":
         return "fa fa-user-circle fa-lg"; // Replace with the desired icon class for "Projects I Own"
@@ -133,7 +145,7 @@ this.inEditproject(element);
         return "";
     }
   }
-  // Function to handle item selection
+ 
   selectItem(item: string) {
     this.selectedSidebarItem = item;
     // TODO: Add logic to handle item selection

@@ -200,3 +200,15 @@ align-items: center;
   padding: 2px;
   box-sizing: border-box;
 }
+
+.row {
+  background-color: rgb(10, 10, 10); /* Set the desired background color */
+  font-weight: bold; 
+/* Add any other desired styles */
+}
+
+
+.sidebar li.active {
+  background-color: #34347a;
+  color: white;
+}

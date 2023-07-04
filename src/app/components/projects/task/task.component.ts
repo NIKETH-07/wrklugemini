@@ -11,6 +11,7 @@ import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree'
 
 
 export interface PeriodicElement {
+  expandable: boolean;
   editMode: boolean;
   name: string;
   position: number;
@@ -34,8 +35,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
   {position: 0,
      name: 'Workluge',
      children: [
-      { name: 'workluge 2',position: 0,assignment: "jaffer",duration: '22',planhour:'14',percent:'100%',dueon:'10/02/2023',starton:'01/02/2023',no:1,taskid:'',editMode: false, },
-      { name: 'workluge 3',position: 1,assignment: "jan",duration: '24',planhour:'17',percent:'80%',dueon:'11/02/2023',starton:'02/02/2023',no:2,taskid:'',editMode: false, },
+      { name: 'workluge 2',position: 0,assignment: "jaffer",duration: '22',planhour:'14',percent:'100%',dueon:'10/02/2023',starton:'01/02/2023',no:1,taskid:'',editMode: false,  expandable:false },
+      { name: 'workluge 3',position: 1,assignment: "jan",duration: '24',planhour:'17',percent:'80%',dueon:'11/02/2023',starton:'02/02/2023',no:2,taskid:'',editMode: false, expandable:false },
 
      
     ],
@@ -47,7 +48,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
       dueon:'10/02/2023',
      starton:'01/02/2023',
      no:0,
-     taskid:''
+     taskid:'',
+     expandable:false
     
     },{position: 1,
       editMode: false,
@@ -60,7 +62,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
       dueon:'20/06/2023',
       starton:'1/6/2023',
      no:1,
-     taskid:''
+     taskid:'',
+     expandable:false
      },
  ];
 
@@ -156,16 +159,16 @@ level: level,
 
   
   selection = new SelectionModel<PeriodicElement>(true, []);
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+  // applyFilter(event: Event) {
+  //   const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
   
-    if (filterValue) {
-      this.filteredData = this.filterTreeData(this.dataSource.data, filterValue);
-      this.dataSource.data = this.filteredData;
-    } else {
-      this.dataSource.data = ELEMENT_DATA;
-    }
-  }
+  //   if (filterValue) {
+  //     this.filteredData = this.filterTreeData(this.dataSource.data, filterValue);
+  //     this.dataSource.data = this.filteredData;
+  //   } else {
+  //     this.dataSource.data = ELEMENT_DATA;
+  //   }
+  // }
   
   filterTreeData(data: PeriodicElement[], filterValue: string): PeriodicElement[] {
     const filteredData: PeriodicElement[] = [];
@@ -175,11 +178,19 @@ level: level,
   
       if (node.children) {
         newNode.children = this.filterTreeData(node.children, filterValue);
+        if (newNode.children.length > 0) {
+          // Preserve the expandable state based on the filtered children
+          newNode.expandable = true;
+        }
       }
   
       if (
         newNode.name.toLowerCase().includes(filterValue) ||
         newNode.assignment.toLowerCase().includes(filterValue) ||
+        newNode.planhour.toLowerCase().includes(filterValue) ||
+        newNode.duration.toLowerCase().includes(filterValue) ||
+        newNode.starton.toLowerCase().includes(filterValue) ||
+        newNode.dueon.toLowerCase().includes(filterValue) ||
         (newNode.children && newNode.children.length > 0)
       ) {
         filteredData.push(newNode);
@@ -188,6 +199,21 @@ level: level,
   
     return filteredData;
   }
+  
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+  
+    if (filterValue) {
+      this.filteredData = this.filterTreeData(this.dataSource.data, filterValue);
+      this.dataSource.data = this.filteredData;
+  
+      // Expand all nodes in the tree
+      this.treeControl.expandAll();
+    } else {
+      this.dataSource.data = ELEMENT_DATA;
+    }
+  }
+  
   
   
   
@@ -319,7 +345,8 @@ level: level,
         starton:result.startOn,
         no:this.dataSource.data.length + 1,
         taskid:result.taskId,
-        editMode: result
+        editMode: result,
+        expandable:false
         
       };
 
@@ -435,8 +462,8 @@ processProjects(projects: any[]): PeriodicElement[] {
   const processedProjects: PeriodicElement[] = projects.map((project, index) => ({
     position: index,
     name: project.taskName,
-    ...project,
-    assignment: project.assignee, // Access the name property of the assignee object
+   
+    assignment: project.assignee ? project.assignee.name: '', // Access the name property of the assignee object
     duration: project.duration,
     planhour: project.planHours,
     percent: project.status === "active" ? "100%" : "0%",
@@ -444,7 +471,8 @@ processProjects(projects: any[]): PeriodicElement[] {
     dueon: project.dueOn,
     no: index,
     taskid: project.taskId,
-    editMode: false
+    editMode: false,
+    expandable:false
   }));
   
   

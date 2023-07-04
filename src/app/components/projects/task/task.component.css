@@ -160,7 +160,11 @@
   
   /* Apply border to the last cell in each row to complete the separation */
  
-  
+  .task {
+    /* Define the width for the columns */
+    width: 150px;
+     /* Adjust the width as needed */
+  }
   .column-cell {
     /* Define the width for the columns */
     width: 150px; /* Adjust the width as needed */
