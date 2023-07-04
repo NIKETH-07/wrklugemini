@@ -15,6 +15,7 @@ export class LoginSignupComponent implements OnInit {
   hide: boolean = true;
   isLoginVisible = true;
   isSignupVisible = false;
+  initials: string = '';
 
 
   constructor(private fb: FormBuilder,private router: Router,private http: HttpClient,private apiService: ServiceComponent) {
@@ -35,6 +36,7 @@ export class LoginSignupComponent implements OnInit {
 
   onLogin() {
     const email = this.loginForm.controls['email'].value;
+    
     localStorage.setItem('EMAIL',email);
     const password = this.loginForm.controls['password'].value;
     const apiUrl = this.apiService.apiUrl;
@@ -67,7 +69,14 @@ export class LoginSignupComponent implements OnInit {
     }
     console.log(this.loginForm.value);
   }
-
+  getInitials(): string {
+    const email = localStorage.getItem('EMAIL');
+    if (email) {
+      const initials = email.substr(0, 2).toUpperCase();
+      return initials;
+    }
+    return 'N/A';
+  }
   
   
 }

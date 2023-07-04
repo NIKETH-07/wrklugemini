@@ -205,12 +205,14 @@
     width: 100%;
     overflow: auto;
     max-height: 400px;
+    
    
     overflow-x: auto;
   }
 
  .table {
   table-layout: fixed;
+  border-bottom: 1px solid rgb(180, 180, 180);
   /* Additional styles if needed */
 }
 

@@ -195,6 +195,13 @@
     width: 100%;
     overflow-x: auto;
   }
+
+  .table {
+ 
+    border-bottom: 1px solid rgb(180, 180, 180);
+    /* Additional styles if needed */
+  }
+
   .search-container {
     display: flex;
     flex-direction: column;

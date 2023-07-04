@@ -56,4 +56,7 @@
     font-weight: bold; /* Make the text bold */
 }
 
-  
+.initials {
+  letter-spacing: 2px; /* Adjust the value as per your preference */
+}
+ 

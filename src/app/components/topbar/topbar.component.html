@@ -23,8 +23,8 @@
         
      
     </form>
-  <mat-icon style="padding-left: 15px;padding-top: 13px; size: 4px;color: #d3d4d4;" >settings</mat-icon>
- 
+  <mat-icon style="padding-left: 15px;padding-top: 13px; size: 4px;color: #d3d4d4;"matTooltip="Delete Account" matTooltipPosition="above" (click)="delete()">settings</mat-icon>
+
    
     <mat-icon matBadge="15" matBadgeColor="warn" style="padding-left: 15px;padding-top: 13px; size: 4px;color: #d3d4d4;">notifications</mat-icon>
       <!-- Include text description of the icon's meaning for screen-readers -->
@@ -32,7 +32,7 @@
          15
       </span>
       <a  (click)="logout()">
-        <div class="circle" style="margin-left: 15px;" matTooltip="Logout" matTooltipPosition="above">US</div>
+        <div class="circle initials" style="margin-left: 15px;" matTooltip="Logout" matTooltipPosition="above">{{getInitials() }}</div>
       </a>
 
 

@@ -10,10 +10,20 @@ import { ServiceComponent } from '../service/service.component';
   styleUrls: ['./topbar.component.css']
 })
 export class TopbarComponent {
- 
+  
 
   constructor(public dialog: MatDialog ,private router: Router,private http: HttpClient ,private projectService: ServiceComponent,private apiService: ServiceComponent) {}
  logout() {
+  
+        this.router.navigate(['/']);
+        localStorage.removeItem('token');
+     
+
+
+  }
+
+
+  delete() {
     const ID = localStorage.getItem('userId');
    const token = localStorage.getItem('token')
     
@@ -37,5 +47,13 @@ export class TopbarComponent {
     );
 
 
+  }
+  getInitials(): string {
+    const email = localStorage.getItem('EMAIL');
+    if (email) {
+      const initials = email.substr(0 , 2).toUpperCase();
+      return initials;
+    }
+    return 'N/A';
   }
 }

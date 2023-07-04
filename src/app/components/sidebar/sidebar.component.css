@@ -212,3 +212,8 @@ align-items: center;
   background-color: #34347a;
   color: white;
 }
+.table {
+ 
+  border-bottom: 1px solid rgb(180, 180, 180);
+  /* Additional styles if needed */
+}
