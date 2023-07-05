@@ -46,6 +46,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import { AuthComponent } from './components/service/auth/auth.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ErrorDialogComponent } from './components/login-signup/errordialog';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     TaskComponent,
     AdddialogComponent,
     AuthComponent,
+    ErrorDialogComponent
    
     
     

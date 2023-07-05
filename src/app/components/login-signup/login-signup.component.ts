@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ServiceComponent } from '../service/service.component';
+import { ErrorDialogComponent } from './errordialog';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
@@ -10,6 +12,8 @@ import { ServiceComponent } from '../service/service.component';
   templateUrl: './login-signup.component.html',
   styleUrls: ['./login-signup.component.css']
 })
+
+
 export class LoginSignupComponent implements OnInit {
 
   hide: boolean = true;
@@ -18,7 +22,7 @@ export class LoginSignupComponent implements OnInit {
   initials: string = '';
 
 
-  constructor(private fb: FormBuilder,private router: Router,private http: HttpClient,private apiService: ServiceComponent) {
+  constructor(private fb: FormBuilder,private router: Router,private http: HttpClient,private apiService: ServiceComponent,private dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -54,15 +58,27 @@ export class LoginSignupComponent implements OnInit {
         
         
         localStorage.setItem('token',token );
-        alert('User login Successfully')
+        
         this.router.navigate(['/projects']); 
+
+        const dialogRef = this.dialog.open(ErrorDialogComponent, {
+          data: {
+            success: true,
+            successMessage: 'User login successfully!'
+          },
+          width: '300px',
+          panelClass: 'custom-dialog'
+        });
       },
       (error) => {
-        // Handle the error response
         console.error(error);
-        alert('User Not Found')
-        
+        const dialogRef = this.dialog.open(ErrorDialogComponent, {
+          data: { message: 'User Not Found' },
+          width: '300px', // Set the width of the dialog box
+          // Apply a custom CSS class to the dialog box
+        });
       }
+      
     );
     if (!this.loginForm.valid) {
       return;
