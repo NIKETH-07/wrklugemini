@@ -1,0 +1,5 @@
+.example-input::-webkit-inner-spin-button,
+.no-scroll-arrows::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

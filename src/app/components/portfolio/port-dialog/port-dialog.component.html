@@ -4,8 +4,8 @@
         <label class="label">Name</label>
         <form class="example-form">
             <div class="input-container">
-                <input type="text" class="example-input" [(ngModel)]="this.name" [ngModelOptions]="{standalone: true}">
-                
+                <input type="text" class="example-input" [(ngModel)]="this.name" [ngModelOptions]="{standalone: true}" name="name" required>
+                <span class="error-message" *ngIf="!name"><a style="color: red;margin-left: 2px;">*</a></span>
             </div>
         </form>
     </div></td>
@@ -13,7 +13,8 @@
         <label class="label">Manager</label>
         <form class="example-form">
             <div class="input-container">
-                <input type="text" class="example-input" [(ngModel)]="this.owner" [ngModelOptions]="{standalone: true}">
+                <input type="text" class="example-input" [(ngModel)]="this.owner" [ngModelOptions]="{standalone: true}" name="owner" required>
+                <span class="error-message" *ngIf="!owner"><a style="color: red;margin-left: 2px;">*</a></span> 
             </div>
         </form>
     </div></td></tr>
@@ -21,7 +22,8 @@
         <label class="label">Description</label>
         <form class="example-form">
             <div class="input-container">
-                <input type="text" class="example-input" style="width: 300px; height: 50px;" [(ngModel)]="this.description" [ngModelOptions]="{standalone: true}">
+                <input type="text" class="example-input" style="width: 300px; height: 50px;" [(ngModel)]="this.description" [ngModelOptions]="{standalone: true}" name="description" required>
+                <span class="error-message" *ngIf="!description"><a style="color: red;margin-left: 2px;">*</a></span> 
             </div>
         </form>
     </div>
@@ -36,10 +38,12 @@
     <tr> <td style="padding-right: 15px;"><div class="form-field box-shaped-form-field">
     <label class="label">Entry By Date</label>
     <mat-form-field appearance="outline" class="custom-form-field">
-      <input matInput [matDatepicker]="startDatePicker" [(ngModel)]="this.planstart" [ngModelOptions]="{ standalone: true }">
+      <input matInput [matDatepicker]="startDatePicker" [(ngModel)]="this.planstart" [ngModelOptions]="{ standalone: true }" name="planstart" required>
       <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
       <mat-datepicker #startDatePicker></mat-datepicker>
-    </mat-form-field>
+
+    </mat-form-field>      <span class="error-message" *ngIf="!planstart"><a style="color: red;margin-left: 2px;">*</a></span> 
+
   </div></td>
    <!-- <td style="padding-right: 15px;"> <div class="form-field">
         <label class="label">Start Date</label>
@@ -52,10 +56,12 @@
      <td> <div class="form-field box-shaped-form-field">
     <label class="label">Last Updated By Email Address</label>
     <mat-form-field appearance="outline">
-      <input matInput [matDatepicker]="endDatePicker" [(ngModel)]="this.planupdate" [ngModelOptions]="{ standalone: true }">
+      <input matInput [matDatepicker]="endDatePicker" [(ngModel)]="this.planupdate" [ngModelOptions]="{ standalone: true }" name="planupdate" required>
       <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
       <mat-datepicker #endDatePicker></mat-datepicker>
-    </mat-form-field>
+
+    </mat-form-field>      <span class="error-message" *ngIf="!planupdate"><a style="color: red;margin-left: 2px;">*</a></span> 
+
   </div></td></tr>
     <!-- <div class="form-field">
         <label class="label">Planned To Completion</label>
@@ -68,5 +74,5 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancel</button>
-    <button mat-button mat-dialog-close (click)="Addproject()" cdkFocusInitial>Done</button>
+    <button mat-button mat-dialog-close (click)="Addproject()" cdkFocusInitial [disabled]="!isValidForm()">Done</button>
 </mat-dialog-actions>

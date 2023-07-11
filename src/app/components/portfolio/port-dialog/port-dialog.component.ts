@@ -72,6 +72,9 @@ export class PortDialogComponent {
     );
     this.dialogRef.close()
   }
+  isValidForm(): boolean {
+    return !!(this.name && this.owner && this.planstart && this.description && this.planupdate );
+  }
 }
 
 

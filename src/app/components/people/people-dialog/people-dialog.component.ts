@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-people-dialog',
@@ -67,6 +68,9 @@ export class PeopleDialogComponent {
       }
     );
     this.dialogRef.close()
+  }
+  isValidForm(): boolean {
+    return !!(this.name && this.email && this.jobinfo && this.phone && this.address);
   }
 }
 

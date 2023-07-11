@@ -107,10 +107,20 @@ export class TaskComponent implements OnInit {
   }
   formatDate(date: string | null): string | null {
     if (date) {
-      return this.datePipe.transform(date, 'dd MMM yyyy');
+      // Check if the date is from the API (using a specific format)
+      if (date.includes('/')) {
+        const [month, day, year] = date.split('/');
+        const parsedDate = new Date(Number(year), Number(month) - 1, Number(day));
+        return this.datePipe.transform(parsedDate, 'dd MMM yyyy');
+      } else {
+        // Date is from static data (using a different format)
+        const parsedDate = new Date(date);
+        return this.datePipe.transform(parsedDate, 'MMM dd, yyyy');
+      }
     }
     return null;
   }
+  
 
   onEdit(element: PeriodicElement) {
     // Enable edit mode for the selected row
@@ -449,15 +459,17 @@ level: level,
       if (projectData.length > 0) {
         this.projectService.updateProjects(projectData);
         this.dataSource.data = this.processProjects(projectData);
+        this.totalItems = projectData.length;
       } else {
         this.dataSource.data = ELEMENT_DATA;
-      }
+       
+      } 
     },
     (error) => {
       // Handle the error response
       console.error(error);
     }
-  );
+  );this.totalItems = ELEMENT_DATA.length;
 }
 showingResults: number = 5;
 processProjects(projects: any[]): PeriodicElement[] {
@@ -486,7 +498,7 @@ processProjects(projects: any[]): PeriodicElement[] {
   }));
   
   
-  this.totalItems = filteredProjects.length;
+  
   this.filteredData = processedProjects;
   return processedProjects;
 }

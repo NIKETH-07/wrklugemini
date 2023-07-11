@@ -90,6 +90,9 @@ export class AdddialogComponent {
     );
     this.dialogRef.close()
   }
+  isValidForm(): boolean {
+    return !!(this.name && this.dueon && this.starton && this.planhour && this.percent &&this.assignment &&this.duration );
+  }
   
 }
 
