@@ -1,0 +1,195 @@
+
+
+<mat-drawer-container class="example-container">
+    <mat-drawer mode="side" opened class="sidebar">
+      <ul >
+        <li *ngFor="let item of sidebarItems" (click)="selectItem(item)">
+          <i [ngClass]="getIconClass(item)" class="sidebar-icon"></i> 
+          <span class="sidebar-text">{{ item }}</span>
+  
+        </li>
+      </ul>
+    </mat-drawer>
+    <mat-drawer-content class="main-content">
+      <div class="container">
+        <mat-card class="card">
+          <mat-card-header>
+            <div style="font-weight: 550; font-size: large; color: #34347a;">{{ selectedSidebarItem }}</div>
+            <div class="controller">
+              <!-- Your controller content here -->
+            </div>
+          </mat-card-header><br>
+          <mat-card-content class="card-content">
+            <div class="content-wrapper">
+            <div class="left-buttons">
+              
+              <button  class="icon-button" style="height: 24px; background-color: #34347a;"  (click)="  openDialog()">
+                <mat-icon style="color: aliceblue;" class="icon">add</mat-icon>
+                <span class="text" style="color: aliceblue;font-size: small; ">New Portfolio</span>
+                <mat-icon style="color: aliceblue;" class="endcon">expand_more</mat-icon>
+              </button>
+             
+              <button  class="icon-button" style="height: 24px;">
+                <mat-icon style="color: #34347a;" class="icon">file_download</mat-icon>
+                <span class="text" style="color: #34347a; font-size:small;">Export</span>
+                <mat-icon style="color: #34347a;" class="endcon">expand_more</mat-icon>
+              </button>
+              <div *ngIf="isRowSelected">
+              <button  class="icon-button" style="height: 24px; background: #34347a;" (click)="onDialog()">
+                <mat-icon style="color: aliceblue;" class="icon">edit</mat-icon>
+                <span class="text" style="color: aliceblue; font-size:small;">Edit</span>
+                <mat-icon style="color: aliceblue;" class="endcon">expand_more</mat-icon>
+              </button></div>
+              <div *ngIf="isRowSelected">
+                <button  class="icon-button" style="height: 24px; background-color: #f55d5d;" (click)="deleteSelectedRow()">
+                  <mat-icon style="color: aliceblue;" class="icon">delete</mat-icon>
+                  <span class="text" style="color: aliceblue; font-size:small;">Delete</span>
+                  <mat-icon style="color: aliceblue;" class="endcon">expand_more</mat-icon>
+                </button>
+              
+                <!-- <button  class="icon-button" style="height: 24px;">
+                  <mat-icon style="color: aliceblue;" class="icon">file_download</mat-icon>
+                  <span class="text" style="color: aliceblue; font-size:small;">Export</span>
+                  <mat-icon style="color: aliceblue;" class="endcon">expand_more</mat-icon>
+                </button> -->
+              </div>
+  
+  
+            </div>
+  
+            <div class="right-buttons">
+             
+              <div class="form-field">
+                <label class="label">Filter</label>
+                <form class="example-form" >
+                  
+                  <div class="input-container">
+                    <input type="text" placeholder="All" class="example-input">
+                    <span class="suffix-icon">
+                      <i class="material-icons" >expand_more</i>
+                    </span>
+                  </div>
+                  
+                         
+                </form>
+              </div>
+             
+             
+              <div class="form-field">
+                <label class="label">View</label>
+                <form class="example-form">
+                  <div class="input-container">
+                    <input type="text" placeholder="Text View" class="example-input">
+                    <span class="suffix-icon">
+                      <i class="material-icons">expand_more</i>
+                    </span>
+                  </div>
+                </form>
+              </div>
+              <div class="form-field">
+                <label class="label">Grouping</label>
+                <form class="example-form">
+                  <div class="input-container">
+                    <input type="text" placeholder="Nothing" class="example-input">
+                    <span class="suffix-icon">
+                      <i class="material-icons">expand_more</i>
+                    </span>
+                  </div>
+                </form>
+              </div>
+            </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        <div class="search-container">
+        <form >
+          <div class="input-container">
+            <input matInput (keyup)="applyFilter($event)" placeholder="Search" #input>
+            <span class="suffix-icon">
+              <i class="material-icons">search</i>
+            </span>
+          </div>
+        </form>
+        </div>
+  
+        <div class="table-container">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8  table">
+  
+          <!-- Checkbox Column -->
+          <ng-container matColumnDef="select">
+            
+            <th mat-header-cell *matHeaderCellDef  class="column-cell match">
+              <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                            [checked]="selection.hasValue() && isAllSelected()"
+                            [indeterminate]="selection.hasValue() && !isAllSelected()"
+                            [aria-label]="checkboxLabel()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row" class="column-cell match">
+              <mat-checkbox (click)="$event.stopPropagation()"
+                            (change)="$event ? selection.toggle(row) : null"
+                            [checked]="selection.isSelected(row)"
+                            [aria-label]="checkboxLabel(row)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+        
+          <!-- Position Column -->
+          
+        
+          <!-- Name Column -->
+          <ng-container matColumnDef="name" >
+            <th mat-header-cell *matHeaderCellDef class="column-cell"> Name </th>
+            <td mat-cell *matCellDef="let element" class="column-cell"> 
+              <input *ngIf="element.editMode" [(ngModel)]="element.name" (keydown.enter)="onSave(element)"class="edit-input">
+      <span *ngIf="!element.editMode" (click)="onEdit(element)">{{ element.name }}</span> </td>
+          </ng-container>
+        
+          <!-- Weight Column -->
+          <ng-container matColumnDef="owner">
+            <th mat-header-cell *matHeaderCellDef class="column-cell"> Description </th>
+            <td mat-cell *matCellDef="let element" class="column-cell"> 
+              <input *ngIf="element.editMode" [(ngModel)]="element.description" (keydown.enter)="onSave(element)"class="edit-input">
+      <span *ngIf="!element.editMode" (click)="onEdit(element)">{{ element.description }}</span> </td>
+          </ng-container>
+        
+          <!-- Symbol Column -->
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef class="column-cell description"> Portfolio Manager </th>
+            <td mat-cell *matCellDef="let element" class="column-cell  description"> 
+              <input *ngIf="element.editMode" [(ngModel)]="element.owner" (keydown.enter)="onSave(element)"class="edit-input">
+      <span *ngIf="!element.editMode" (click)="onEdit(element)">{{ element.owner }}</span> </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="percent">
+            <th mat-header-cell *matHeaderCellDef class="column-cell percent"> Entered By:<br>Entry Date </th>
+            <td mat-cell *matCellDef="let element" class="column-cell percent "> <input *ngIf="element.editMode" [(ngModel)]="element.percent" (keydown.enter)="onSave(element)"class="edit-input">
+              <span *ngIf="!element.editMode" (click)="onEdit(element)">{{ element.percent }}</span> </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef class="column-cell date "> Last Updated By:Email Address </th>
+            <td mat-cell *matCellDef="let element" class="column-cell date "> <input *ngIf="element.editMode" [(ngModel)]="element.date" (keydown.enter)="onSave(element)"class="edit-input">
+              <span *ngIf="!element.editMode" (click)="onEdit(element)">{{ element.date }}</span> </td>
+          </ng-container>
+        
+          <tr mat-header-row *matHeaderRowDef="displayedColumns " class="header-row"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+              (click)=" onRowClick(row) "   [class.selected]="selection.isSelected(row)  " >
+          </tr>
+        </table>
+        </div>
+        <mat-paginator
+        [length]="totalItems"
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        (page)="onPageChange($event)"
+      ></mat-paginator>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
+  
+  
+  
+  

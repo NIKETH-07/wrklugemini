@@ -1,0 +1,68 @@
+<h2 mat-dialog-title>Add Project</h2>
+<mat-dialog-content class="mat-typography">
+  <table>
+    <tr>
+      <td style="padding-right: 15px;">
+        <div class="form-field" style="margin-bottom: 2px;">
+          <label class="label">Name</label>
+          <div class="input-container">
+            <input type="text" class="example-input" [(ngModel)]="name" [ngModelOptions]="{standalone: true}" name="name" required>
+            <span class="error-message" *ngIf="!name"><a style="color: red;margin-left: 2px;">*</a></span>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div class="form-field ">
+          <label class="label">Owner</label>
+          <div class="input-container">
+            <input type="text" class="example-input" [(ngModel)]="owner" [ngModelOptions]="{standalone: true}" name="owner" required>
+            <span class="error-message" *ngIf="!owner"><a style="color: red;margin-left: 2px;">*</a></span>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </table>
+  <div class="form-field" style="margin-bottom: 20px;">
+    <label class="label">Description</label>
+    <div class="input-container">
+      <input type="text" class="example-input" style="width: 300px; height: 50px;" [(ngModel)]="description" [ngModelOptions]="{standalone: true}" name="description">
+      <span class="error-message" *ngIf="!description"><a style="color: red;margin-left: 2px;">*</a></span>
+    </div>
+  </div>
+  <div class="form-field" style="margin-bottom: 20px;">
+    <label class="label">Project type</label>
+    <div class="input-container">
+      <input type="text" class="example-input" name="projectType">
+    </div>
+  </div>
+  <table>
+    <tr>
+      <td style="padding-right: 15px;">
+        <div class="form-field box-shaped-form-field">
+          <label class="label">Planned To Start</label>
+          <mat-form-field appearance="outline">
+            <input matInput [matDatepicker]="startDatePicker" [(ngModel)]="planstart" [ngModelOptions]="{ standalone: true }" name="plannedStartDate" required>
+            <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #startDatePicker></mat-datepicker>
+          </mat-form-field>
+          <span class="error-message" *ngIf="!planstart"><a style="color: red;margin-left: 2px;">*</a></span>
+        </div>
+      </td>
+      <td style="padding-right: 15px;">
+        <div class="form-field box-shaped-form-field">
+          <label class="label">End Date</label>
+          <mat-form-field appearance="outline">
+            <input matInput [matDatepicker]="endDatePicker" [(ngModel)]="percent" [ngModelOptions]="{ standalone: true }" name="endDate" required>
+            <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #endDatePicker></mat-datepicker>
+          </mat-form-field>
+          <span class="error-message" *ngIf="!percent"><a style="color: red; margin-left: 2px;">*</a></span>
+        </div>
+      </td>
+    </tr>
+  </table>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button mat-dialog-close (click)="Addproject()" cdkFocusInitial [disabled]="!isValidForm()">Done</button>
+</mat-dialog-actions>

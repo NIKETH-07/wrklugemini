@@ -1,0 +1,16 @@
+
+  
+  td {
+    padding-right: 1px;
+    
+  }
+  
+  .box-shaped-form-field {
+    box-sizing: border-box;
+   
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    padding: 8px;
+  }
+  
+  

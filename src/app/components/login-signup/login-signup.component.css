@@ -1,0 +1,66 @@
+
+.image{
+  background-color: #343465;
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+mat-card {
+  max-width: 400px;
+  margin: 2em auto;
+  text-align: center;
+height: 360px;
+}
+
+
+.header{
+  text-align: center;
+
+}
+.full-width {
+  width: 80%;
+}
+
+.button-row {
+  padding-top: 15px;
+
+}
+.custom-button {
+  box-shadow: none;
+  border-radius: 0;
+}
+
+
+
+.forget-password{
+  padding-left: 0px;
+}
+
+.emailInput{
+  padding-top: 10px;
+}
+
+.contentBody {
+  padding: 60px 1rem;
+  background :#1b6ca8;
+  display: block;
+}
+
+.aLink{
+  float: right;
+  padding-right: 50px;
+  text-decoration: none;
+}
+.custom-icon-button {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  outline: none;
+  padding-right: 4px;
+}
+

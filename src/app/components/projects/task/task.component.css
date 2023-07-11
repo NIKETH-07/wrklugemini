@@ -1,0 +1,275 @@
+.example-container {
+    height: 100vh;
+    display: flex;
+    
+  }
+  
+  
+  .sidebar {
+    width: 200px;
+    overflow-y: auto;
+    flex-shrink: 0;
+   
+  
+   
+  }
+  
+  .main-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 14px;
+    padding-left: 5px;
+    padding-top: 5px;
+  }
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  li {
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  li:hover {
+    background-color: #ddd;
+  }
+  
+  
+  .sidebar-icon {
+    margin-right: 5px;
+    /* Adjust the value as per your desired spacing */
+  }
+  .sidebar-text {
+    margin-left: 10px;
+    align-items: flex-start;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .card {
+    height: 115px;
+   background: #ecf1f3;
+  }
+  .car {
+    height:90px;
+  }
+  
+  
+  table {
+    width: 100%;
+  }
+  
+  
+  .card-content{
+    display: flex;
+    align-items: center;
+  
+  }
+  .content-wrapper {
+    display: flex;
+   justify-content: space-between;
+    width: 100%;
+    align-items: center;
+  }
+  
+  
+  .left-buttons {
+    display: flex;
+    
+    align-items: center;
+  }
+  
+  
+  .right-buttons {
+    display: flex;
+    align-items: center;
+  }
+  
+  .icon-button {
+   display: flex;
+  align-items: center;
+    margin-right: 10px;
+    
+    
+  }
+  
+  .icon {
+   display: flex;
+   align-items: center;
+    margin-right: 2px;
+   font-size: 17px;
+   
+  }
+  
+  .endicon {
+    display: flex;
+    align-items: center;
+     
+    font-size: 17px;
+    margin-left: 2px;
+   }
+  
+   .example-form {
+    margin-right: 10px;
+   
+  }
+  .custom-form-field {
+    height: 30px; /* Adjust the height value as needed */
+  }
+  
+  .example-input{
+    height: 24px;
+    width: 90px;
+  }
+  
+  .form-field {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1px;
+  }
+  
+  .label {
+    margin-right: 10px;
+  }
+  .input-container {
+    
+    position: relative;
+  }
+  
+  .suffix-icon {
+    position: absolute;
+    top: 60%;
+    right: 10px;
+    transform: translateY(-50%);
+  }
+  
+  .example-additional-selection {
+    opacity: 0.75;
+    font-size: 0.75em;
+  }
+  
+  .column-cell {
+    border-right: 1px solid #ccc;
+    width:70px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* Apply border to the last cell in each row to complete the separation */
+ 
+  .task {
+    /* Define the width for the columns */
+    width: 150px;
+     /* Adjust the width as needed */
+  }
+ 
+  
+  .col {
+    /* Define the width for the columns */
+    width: 100px; /* Adjust the width as needed */
+  }
+  .co {
+    /* Define the width for the columns */
+    width: 40px; /* Adjust the width as needed */
+  }
+  
+  .c {
+    /* Define the width for the columns */
+    width: 80px; /* Adjust the width as needed */
+  }
+
+  .match {
+    /* Define the width for the columns */
+    width: 10px; /* Adjust the width as needed */
+  }
+
+  .dura {
+    width: 58px; /* Adjust the width as needed */
+  }
+.plan {
+    width: 58px; /* Adjust the width as needed */
+  }
+  
+  .column-cell.date {
+    width: 75px; /* Adjust the width as needed */
+  }
+  
+  
+  .table-container {
+    width: 100%;
+    overflow: auto;
+    max-height: 400px;
+    
+   
+    overflow-x: auto;
+  }
+
+ .table {
+  table-layout: fixed;
+  border-bottom: 1px solid rgb(180, 180, 180);
+  /* Additional styles if needed */
+}
+
+
+
+
+  .search-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  .header-row {
+    background-color: #f0f0f0;
+  }
+  
+  .selected {
+    background-color: #bdfa61;
+  }
+  
+  
+  .example-tree-invisible {
+    display: none;
+  }
+  
+  .example-tree ul,
+  .example-tree li {
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style-type: none;
+  }
+  
+  /*
+   * This padding sets alignment of the nested nodes.
+   */
+  .example-tree .mat-nested-tree-node div[role=group] {
+    padding-left: 40px;
+  }
+  
+  /*
+   * Padding for leaf nodes.
+   * Leaf nodes need to have padding so as to align with other non-leaf nodes
+   * under the same parent.
+   */
+  .example-tree div[role=group] > .mat-tree-node {
+    padding-left: 40px;
+  }
+   
+  .end-table-line {
+    border-bottom: 1px solid #131212;
+  }
+  
+  .edit-input {
+    
+    background-color: transparent;
+    padding:7px;
+    width: 100%;
+    padding: 2px;
+    box-sizing: border-box;
+    
+  } 

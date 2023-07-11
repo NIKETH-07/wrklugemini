@@ -1,0 +1,6 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 2px; /* Adjust the value to control the spacing between the components */
+  }
+  

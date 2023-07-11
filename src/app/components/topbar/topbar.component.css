@@ -1,0 +1,62 @@
+
+  
+  /* Style the links inside the navigation bar */
+  .topnav a {
+    float: left;
+    color: #0c0488;
+    text-align: center;
+    
+    padding: 12px 14px;
+    text-decoration: none;
+    font-size: 12px;
+  }
+  
+  /* Change the color of links on hover */
+  .topnav a:hover {
+    
+    background-color: #ddd;
+    
+  }
+  
+  /* Add a color to the active/current link */
+  .circle {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background-color: #d3d4d4;
+    color: #fff;
+    display: flex;
+   
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 10px;
+    
+  }
+  .custom-form-field {
+    height:  65px; 
+    padding-top: 6pt;
+    
+  }
+
+  .shadow-toolbar {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+  }
+  
+  .material-icons{
+    font-size: medium;
+  }
+  .input-container {
+  
+    position: relative;
+  }
+
+  .topnav a:focus {
+    transform: scale(1.2); /* Increase the scale to zoom in */
+    font-weight: bold; /* Make the text bold */
+}
+
+.initials {
+  letter-spacing: 2px; /* Adjust the value as per your preference */
+}
+ 
