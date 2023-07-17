@@ -535,7 +535,7 @@ inEdittask(element:PeriodicElement) {
        // Handle the successful login response
        console.log(response);
        
-       alert('Project Update Successfully')
+       
       //  this.taskEdited.emit();
       //  this.dialogRef.close();
        

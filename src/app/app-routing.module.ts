@@ -21,7 +21,7 @@ children:[
 { path: 'topbar', component: TopbarComponent},
 { path: 'signup', component: SignupComponent},
 { path: 'projects', component: ProjectsComponent,canActivate: [AuthGuardComponent]},
-{ path: 'portfolio', component: PortfolioComponent,},
+{ path: 'portfolio', component: PortfolioComponent,canActivate: [AuthGuardComponent]},
 { path: 'people', component: PeopleComponent,canActivate: [AuthGuardComponent]},
 { path: 'task', component: TaskComponent,canActivate: [AuthGuardComponent]},
 

@@ -7,6 +7,10 @@ import { Router } from '@angular/router';
 import { DialogContentExampleDialog, AddDialogContentExampleDialog } from '../../sidebar/dialog/dialog.component';
 import { EditDialog, PortDialogComponent,  } from '../port-dialog/port-dialog.component';
 import { ServiceComponent } from '../../service/service.component';
+import * as jspdf from 'jspdf';
+import 'jspdf-autotable';
+
+
 export interface PeriodicElement {
   name: string;
   position: number;
@@ -327,7 +331,30 @@ inEditproject(element: PeriodicElement) {
    );
  
  }
-  
+ exportAsPdf(): void {
+  const doc = new jspdf.default();
+  const selectedSidebarItem = this.selectedSidebarItem;
+
+  // Add the selected sidebar item as a heading in the PDF
+  doc.setFontSize(20);
+  doc.text(`${selectedSidebarItem}`, 10, 10);
+  const headers = [['Name', 'Owner', 'Description', 'Percent Complete', 'Planned Start Date']];
+  const data = this.dataSource.data.map(element => [
+    element.name,
+    element.owner,
+    element.description,
+    element.percent,
+    element.date
+  ]);
+
+  (doc as any).autoTable({
+    head: headers,
+    body: data,
+  });
+
+  doc.save('table_details.pdf');
+}
+ 
   
 }
 
